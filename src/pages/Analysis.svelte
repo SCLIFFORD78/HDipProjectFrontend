@@ -33,22 +33,24 @@
   };
 
   let tempData = {
-    labels: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
+    labels: [],
     datasets: [
       {
-        values: [19,20,22,23,20,25,21,21,25,26,25,24],
+        values: [],
       },
     ],
   };
 
   let humidityData = {
-    labels: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
+    labels: [],
     datasets: [
       {
-        values: [45,55,68,56,52,55,25,45,85,45,56,52,53,54,57,58,59],
+        values: [],
       },
     ],
   };
+  
+  
 
   async function refreshCharts() {
     let hiveList = await hiveTracker.getHives();
@@ -57,6 +59,22 @@
     let sumLangstroth = 0;
     let sumTopBar = 0;
     let sumWarré = 0;
+    let tempValues = [];
+    let humidityValues = [];
+
+    hiveList.forEach((hive) => {
+      var values = JSON.parse("[" + hive["recordedData"] + "]");
+      var temps = [];
+      values.forEach((element) => {
+        console.log(element);
+        var theDate = new Date(element["timeStamp"] * 1000);
+        var dateString = theDate.toLocaleDateString() + " " + theDate.getHours()+":"+theDate.getMinutes()+":"+theDate.getMinutes();
+        tempData.datasets[0].values.push(element["Temperature"]);
+        tempData.labels.push(dateString);
+        humidityData.datasets[0].values.push(element["Humidity"]);
+        humidityData.labels.push(dateString);
+      });
+    });
 
     hiveList.forEach((hive) => {
       if (hive.hiveType == "Super") {
@@ -90,7 +108,6 @@
     });
   }
 
-
   onMount(async () => {
     hives = await hiveTracker.getHives();
     users = await hiveTracker.getUsers();
@@ -98,7 +115,9 @@
   });
 </script>
 
-<div class="uk-child-width-expand@s uk-text-center uk-height-large uk-align-center" >
+<div
+  class="uk-child-width-expand@s uk-text-center uk-height-large uk-align-center"
+>
   <div>
     <div
       class="uk-card uk-card-default uk-card-large uk-card-body uk-box-shadow-large uk-width-2xlarge uk-margin uk-height- uk-align-center "
@@ -108,7 +127,9 @@
     </div>
   </div>
 </div>
-<div class="uk-child-width-expand@s uk-text-center uk-height-large uk-align-center">
+<div
+  class="uk-child-width-expand@s uk-text-center uk-height-large uk-align-center"
+>
   <div>
     <div
       class="uk-card uk-card-default uk-card-large uk-card-body uk-box-shadow-large uk-width-2xlarge uk-margin uk-height-large uk-align-center"
@@ -118,7 +139,9 @@
     </div>
   </div>
 </div>
-<div class="uk-child-width-expand@s uk-text-center uk-height-large uk-align-center">
+<div
+  class="uk-child-width-expand@s uk-text-center uk-height-large uk-align-center"
+>
   <div>
     <div
       class="uk-card uk-card-default uk-card-large uk-card-body uk-box-shadow-large uk-width-2xlarge uk-margin uk-height-large uk-align-center"
@@ -128,7 +151,9 @@
     </div>
   </div>
 </div>
-<div class="uk-child-width-expand@s uk-text-center uk-height-large uk-align-center">
+<div
+  class="uk-child-width-expand@s uk-text-center uk-height-large uk-align-center"
+>
   <div>
     <div
       class="uk-card uk-card-default uk-card-large uk-card-body uk-box-shadow-large uk-width-2xlarge uk-margin uk-height-large uk-align-center"
@@ -138,4 +163,3 @@
     </div>
   </div>
 </div>
-
