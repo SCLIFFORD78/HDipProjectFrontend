@@ -28,6 +28,7 @@
     "mongoose": "^4.13.21",
     "mongoose-auto-increment": "^5.0.1",
     "nodemailer": "^6.6.1",
+    "svelte-chartjs": "^1.1.4",
     "svelte-frappe-charts": "^1.8.2",
     "svelte-spa-router": "^3.1.0"
   }

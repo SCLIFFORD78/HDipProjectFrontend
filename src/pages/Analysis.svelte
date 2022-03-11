@@ -32,17 +32,26 @@
     ],
   };
 
-  let donorData = {
-    labels: [],
+  let tempData = {
+    labels: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
     datasets: [
       {
-        values: [],
+        values: [19,20,22,23,20,25,21,21,25,26,25,24],
       },
     ],
   };
+
+  let humidityData = {
+    labels: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
+    datasets: [
+      {
+        values: [45,55,68,56,52,55,25,45,85,45,56,52,53,54,57,58,59],
+      },
+    ],
+  };
+
   async function refreshCharts() {
     let hiveList = await hiveTracker.getHives();
-
     let sumSuper = 0;
     let sumNational = 0;
     let sumLangstroth = 0;
@@ -106,6 +115,26 @@
     >
       <h3>Types of Registered Users</h3>
       <Chart data={userData} type="pie" />
+    </div>
+  </div>
+</div>
+<div class="uk-child-width-expand@s uk-text-center uk-height-large uk-align-center">
+  <div>
+    <div
+      class="uk-card uk-card-default uk-card-large uk-card-body uk-box-shadow-large uk-width-2xlarge uk-margin uk-height-large uk-align-center"
+    >
+      <h3>Temperature Data</h3>
+      <Chart data={tempData} type="line" />
+    </div>
+  </div>
+</div>
+<div class="uk-child-width-expand@s uk-text-center uk-height-large uk-align-center">
+  <div>
+    <div
+      class="uk-card uk-card-default uk-card-large uk-card-body uk-box-shadow-large uk-width-2xlarge uk-margin uk-height-large uk-align-center"
+    >
+      <h3>Humidity Data</h3>
+      <Chart data={humidityData} type="line" />
     </div>
   </div>
 </div>
