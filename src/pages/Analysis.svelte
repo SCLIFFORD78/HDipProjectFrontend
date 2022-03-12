@@ -49,8 +49,6 @@
       },
     ],
   };
-  
-  
 
   async function refreshCharts() {
     let hiveList = await hiveTracker.getHives();
@@ -61,6 +59,8 @@
     let sumWarré = 0;
     let tempValues = [];
     let humidityValues = [];
+    let tempLabels = [];
+    let humidityLabels = [];
 
     hiveList.forEach((hive) => {
       var values = JSON.parse("[" + hive["recordedData"] + "]");
@@ -68,11 +68,22 @@
       values.forEach((element) => {
         console.log(element);
         var theDate = new Date(element["timeStamp"] * 1000);
-        var dateString = theDate.toLocaleDateString() + " " + theDate.getHours()+":"+theDate.getMinutes()+":"+theDate.getMinutes();
-        tempData.datasets[0].values.push(element["Temperature"]);
-        tempData.labels.push(dateString);
-        humidityData.datasets[0].values.push(element["Humidity"]);
-        humidityData.labels.push(dateString);
+        var dateString =
+          theDate.toLocaleDateString() +
+          " " +
+          theDate.getHours() +
+          ":" +
+          theDate.getMinutes() +
+          ":" +
+          theDate.getMinutes();
+        //tempData.datasets[0].values.push(element["Temperature"]);
+        tempValues.push(element["Temperature"])
+        //tempData.labels.push(dateString);
+        tempLabels.push(dateString)
+        //humidityData.datasets[0].values.push(element["Humidity"]);
+        humidityValues.push(element["Humidity"])
+        //humidityData.labels.push(dateString);
+        humidityLabels.push(dateString)
       });
     });
 
@@ -94,6 +105,10 @@
     hiveTypeData.datasets[0].values[2] = sumLangstroth;
     hiveTypeData.datasets[0].values[3] = sumTopBar;
     hiveTypeData.datasets[0].values[4] = sumWarré;
+    tempData.datasets[0].values = tempValues;
+    tempData.labels = tempLabels;
+    humidityData.datasets[0].values = humidityValues;
+    humidityData.labels = humidityLabels
 
     let sumAdmin = 0;
     let sumUser = 0;
