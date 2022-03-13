@@ -32,7 +32,7 @@
     ],
   };
 
-  let donorData = {
+  let tempData = {
     labels: [],
     datasets: [
       {
@@ -40,14 +40,52 @@
       },
     ],
   };
+
+  let humidityData = {
+    labels: [],
+    datasets: [
+      {
+        values: [],
+      },
+    ],
+  };
+
   async function refreshCharts() {
     let hiveList = await hiveTracker.getHives();
-
     let sumSuper = 0;
     let sumNational = 0;
     let sumLangstroth = 0;
     let sumTopBar = 0;
     let sumWarré = 0;
+    let tempValues = [];
+    let humidityValues = [];
+    let tempLabels = [];
+    let humidityLabels = [];
+
+    hiveList.forEach((hive) => {
+      var values = JSON.parse("[" + hive["recordedData"] + "]");
+      var temps = [];
+      values.forEach((element) => {
+        console.log(element);
+        var theDate = new Date(element["timeStamp"] * 1000);
+        var dateString =
+          theDate.toLocaleDateString() +
+          " " +
+          theDate.getHours() +
+          ":" +
+          theDate.getMinutes() +
+          ":" +
+          theDate.getMinutes();
+        //tempData.datasets[0].values.push(element["Temperature"]);
+        tempValues.push(element["Temperature"])
+        //tempData.labels.push(dateString);
+        tempLabels.push(dateString)
+        //humidityData.datasets[0].values.push(element["Humidity"]);
+        humidityValues.push(element["Humidity"])
+        //humidityData.labels.push(dateString);
+        humidityLabels.push(dateString)
+      });
+    });
 
     hiveList.forEach((hive) => {
       if (hive.hiveType == "Super") {
@@ -67,6 +105,10 @@
     hiveTypeData.datasets[0].values[2] = sumLangstroth;
     hiveTypeData.datasets[0].values[3] = sumTopBar;
     hiveTypeData.datasets[0].values[4] = sumWarré;
+    tempData.datasets[0].values = tempValues;
+    tempData.labels = tempLabels;
+    humidityData.datasets[0].values = humidityValues;
+    humidityData.labels = humidityLabels
 
     let sumAdmin = 0;
     let sumUser = 0;
@@ -81,7 +123,6 @@
     });
   }
 
-
   onMount(async () => {
     hives = await hiveTracker.getHives();
     users = await hiveTracker.getUsers();
@@ -89,7 +130,9 @@
   });
 </script>
 
-<div class="uk-child-width-expand@s uk-text-center uk-height-large uk-align-center" >
+<div
+  class="uk-child-width-expand@s uk-text-center uk-height-large uk-align-center"
+>
   <div>
     <div
       class="uk-card uk-card-default uk-card-large uk-card-body uk-box-shadow-large uk-width-2xlarge uk-margin uk-height- uk-align-center "
@@ -99,7 +142,9 @@
     </div>
   </div>
 </div>
-<div class="uk-child-width-expand@s uk-text-center uk-height-large uk-align-center">
+<div
+  class="uk-child-width-expand@s uk-text-center uk-height-large uk-align-center"
+>
   <div>
     <div
       class="uk-card uk-card-default uk-card-large uk-card-body uk-box-shadow-large uk-width-2xlarge uk-margin uk-height-large uk-align-center"
@@ -109,4 +154,27 @@
     </div>
   </div>
 </div>
-
+<div
+  class="uk-child-width-expand@s uk-text-center uk-height-large uk-align-center"
+>
+  <div>
+    <div
+      class="uk-card uk-card-default uk-card-large uk-card-body uk-box-shadow-large uk-width-2xlarge uk-margin uk-height-large uk-align-center"
+    >
+      <h3>Temperature Data</h3>
+      <Chart data={tempData} type="line" />
+    </div>
+  </div>
+</div>
+<div
+  class="uk-child-width-expand@s uk-text-center uk-height-large uk-align-center"
+>
+  <div>
+    <div
+      class="uk-card uk-card-default uk-card-large uk-card-body uk-box-shadow-large uk-width-2xlarge uk-margin uk-height-large uk-align-center"
+    >
+      <h3>Humidity Data</h3>
+      <Chart data={humidityData} type="line" />
+    </div>
+  </div>
+</div>

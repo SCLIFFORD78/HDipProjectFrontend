@@ -8,7 +8,7 @@
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.7",
-    "svelte": "^3.37.0",
+    "svelte": "^3.46.4",
     "vite": "^2.3.0"
   },
   "dependencies": {
@@ -19,7 +19,9 @@
     "@hapi/vision": "^6.0.1",
     "axios": "^0.21.1",
     "cloudinary": "^1.25.1",
+    "d3": "^7.3.0",
     "dotenv": "^10.0.0",
+    "frappe-charts": "^1.6.2",
     "handlebars": "^4.7.7",
     "hapi-auth-jwt2": "^10.2.0",
     "jsonwebtoken": "^8.5.1",
@@ -28,7 +30,8 @@
     "mongoose": "^4.13.21",
     "mongoose-auto-increment": "^5.0.1",
     "nodemailer": "^6.6.1",
-    "svelte-frappe-charts": "^1.8.2",
+    "svelte-chartjs": "^1.1.4",
+    "svelte-frappe-charts": "^1.9.1",
     "svelte-spa-router": "^3.1.0"
   }
 }
