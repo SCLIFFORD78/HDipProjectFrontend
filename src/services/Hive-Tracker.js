@@ -269,6 +269,21 @@ export class HiveTracker {
     }
   }
 
+  async readWeatherHistory(latitude, longtitude) {
+
+    const location = {
+      latitude: latitude,
+      longtitude: longtitude
+    }
+    try {
+
+      const response = await axios.post(this.baseUrl + "/api/hives/readWeatherHistory", location);
+      return response.data;
+    } catch (e) {
+      return null;
+    }
+  }
+
   async gallery(id) {
     try {
 

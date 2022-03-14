@@ -12,6 +12,7 @@
   const hiveTracker = getContext("HiveTracker");
 
   let weather = [];
+  let weatherHistory = [];
   let errorMessage = "";
 
   title.set("Hive Tracker App");
@@ -26,18 +27,20 @@
   const xKey = "x";
   const yKey = "y";
   var points = [];
+  var historicalPoints = [];
   var newData = [];
+  var historicalData = [];
 
   $: {
-    brushedData = points.slice(
-      (brushExtents[0] || 0) * points.length,
-      (brushExtents[1] || 1) * points.length
+    brushedData = historicalPoints.slice(
+      (brushExtents[0] || 0) * historicalPoints.length,
+      (brushExtents[1] || 1) * historicalPoints.length
     );
-    console.log(points);
+    console.log(historicalPoints);
     if (brushedData.length < 2) {
       brushedData = points.slice(
-        brushExtents[0] * points.length,
-        brushExtents[0] * points.length + 2
+        brushExtents[0] * historicalPoints.length,
+        brushExtents[0] * historicalPoints.length + 2
       );
     }
   }
@@ -58,24 +61,46 @@
     //layer cake chart
     points.push({ x: element["timeStamp"], y: element["Temperature"] });
   });
-  
 
   onMount(async () => {
     try {
-      weather = await hiveTracker.getWeather(hive.location.lat, hive.location.lng);
+      weather = await hiveTracker.getWeather(
+        hive.location.lat,
+        hive.location.lng
+      );
+      weatherHistory = await hiveTracker.readWeatherHistory(
+        hive.location.lat,
+        hive.location.lng
+      );
+      if (weatherHistory.length > 0) {
+        weatherHistory.forEach((element) => {
+          var theDate = new Date(element["timeStamp"]);
+          var dateString =
+            theDate.toLocaleDateString() +
+            " " +
+            theDate.getHours() +
+            ":" +
+            theDate.getMinutes() +
+            ":" +
+            theDate.getMinutes();
+          //layer cake chart
+          historicalPoints.push({ x: element["timeStamp"], y: element["Temperature"] });
+        });
+      }
     } catch (error) {
       errorMessage = "Weather Details unavailable";
       console.log(error);
     }
     newData = points;
-    brushedData = points.slice(
-      (brushExtents[0] || 0) * points.length,
-      (brushExtents[1] || 1) * points.length
+    historicalData = historicalPoints
+    brushedData = historicalPoints.slice(
+      (brushExtents[0] || 0) * historicalPoints.length,
+      (brushExtents[1] || 1) * historicalPoints.length
     );
     if (brushedData.length < 2) {
       brushedData = points.slice(
-        brushExtents[0] * points.length,
-        brushExtents[0] * points.length + 2
+        brushExtents[0] * historicalPoints.length,
+        brushExtents[0] * historicalPoints.length + 2
       );
     }
   });
@@ -137,7 +162,7 @@
   <div
     class="uk-padding uk-child-width-expand@s uk-text-center uk-height-small uk-align-center"
   >
-    <LayerCake padding={{ top: 5 }} x="x" y="y" data={newData}>
+    <LayerCake padding={{ top: 5 }} x="x" y="y" data={historicalData}>
       <Svg>
         <Line stroke="#00e047" />
         <Area fill="#00e04710" />
@@ -151,4 +176,3 @@
     </div>
   </div>
 </div>
-
