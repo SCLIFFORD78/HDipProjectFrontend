@@ -3,6 +3,13 @@
   import Chart from "svelte-frappe-charts";
   import { getContext, onMount } from "svelte";
   import AdminSettingsForm from "../components/AdminSettingsForm.svelte";
+  import { LayerCake, Svg, Html } from "layercake";
+  import Line from "../components/Line.svelte";
+  import Area from "../components/Area.svelte";
+  import AxisX from "../components/AxisX.svelte";
+  import AxisY from "../components/AxisY.svelte";
+  import Brush from "../components/Brush.svelte";
+  //import data from "../data/points.csv";
 
   const hiveTracker = getContext("HiveTracker");
 
@@ -11,6 +18,13 @@
   navBar.set({
     bar: mainBar,
   });
+
+  let brushExtents = [null, null];
+  let brushedData;
+
+  const xKey = "x";
+  const yKey = "y";
+  var points = [];
 
   let hives = [];
   let users = [];
@@ -50,6 +64,19 @@
     ],
   };
 
+  $: {
+    brushedData = points.slice(
+      (brushExtents[0] || 0) * points.length,
+      (brushExtents[1] || 1) * points.length
+    );
+    if (brushedData.length < 2) {
+      brushedData = points.slice(
+        brushExtents[0] * points.length,
+        brushExtents[0] * points.length + 2
+      );
+    }
+  }
+
   async function refreshCharts() {
     let hiveList = await hiveTracker.getHives();
     let sumSuper = 0;
@@ -66,7 +93,6 @@
       var values = JSON.parse("[" + hive["recordedData"] + "]");
       var temps = [];
       values.forEach((element) => {
-        console.log(element);
         var theDate = new Date(element["timeStamp"] * 1000);
         var dateString =
           theDate.toLocaleDateString() +
@@ -77,15 +103,28 @@
           ":" +
           theDate.getMinutes();
         //tempData.datasets[0].values.push(element["Temperature"]);
-        tempValues.push(element["Temperature"])
+        tempValues.push(element["Temperature"]);
         //tempData.labels.push(dateString);
-        tempLabels.push(dateString)
+        tempLabels.push(dateString);
+        //layer cake chart
+        points.push({ x: element["timeStamp"], y: element["Temperature"] });
         //humidityData.datasets[0].values.push(element["Humidity"]);
-        humidityValues.push(element["Humidity"])
+        humidityValues.push(element["Humidity"]);
         //humidityData.labels.push(dateString);
-        humidityLabels.push(dateString)
+        humidityLabels.push(dateString);
       });
     });
+
+    brushedData = points.slice(
+      (brushExtents[0] || 0) * points.length,
+      (brushExtents[1] || 1) * points.length
+    );
+    if (brushedData.length < 2) {
+      brushedData = points.slice(
+        brushExtents[0] * points.length,
+        brushExtents[0] * points.length + 2
+      );
+    }
 
     hiveList.forEach((hive) => {
       if (hive.hiveType == "Super") {
@@ -108,7 +147,7 @@
     tempData.datasets[0].values = tempValues;
     tempData.labels = tempLabels;
     humidityData.datasets[0].values = humidityValues;
-    humidityData.labels = humidityLabels
+    humidityData.labels = humidityLabels;
 
     let sumAdmin = 0;
     let sumUser = 0;
@@ -177,4 +216,50 @@
       <Chart data={humidityData} type="line" />
     </div>
   </div>
+</div>
+
+<div
+  class="uk-child-width-expand@s uk-text-center uk-height-large uk-align-center"
+>
+  <LayerCake
+    padding={{ right: 10, bottom: 20, left: 25 }}
+    x={xKey}
+    y={yKey}
+    data={brushedData}
+  >
+    <Svg>
+      <AxisX
+        ticks={(ticks) => {
+          const filtered = ticks.filter((t) => t % 1 === 0);
+          if (filtered.length > 7) {
+            return filtered.filter((t, i) => i % 2 === 0);
+          }
+          return filtered;
+        }}
+      />
+      <AxisY ticks={4} />
+      <Line stroke="#00e047" />
+      <Area fill="#00e04710" />
+    </Svg>
+  </LayerCake>
+</div>
+
+<div
+  class="uk-child-width-expand@s uk-text-center uk-height-large uk-align-center"
+>
+  <LayerCake
+    padding={{ top: 5 }}
+    x={xKey}
+    y={yKey}
+    yDomain={[0, null]}
+    data={points}
+  >
+    <Svg>
+      <Line stroke="#00e047" />
+      <Area fill="#00e04710" />
+    </Svg>
+    <Html>
+      <Brush bind:min={brushExtents[0]} bind:max={brushExtents[1]} />
+    </Html>
+  </LayerCake>
 </div>
