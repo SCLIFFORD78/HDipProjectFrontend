@@ -25,6 +25,7 @@
   const xKey = "x";
   const yKey = "y";
   var points = [];
+  var newData = [];
 
   let hives = [];
   let users = [];
@@ -69,6 +70,7 @@
       (brushExtents[0] || 0) * points.length,
       (brushExtents[1] || 1) * points.length
     );
+    console.log(points)
     if (brushedData.length < 2) {
       brushedData = points.slice(
         brushExtents[0] * points.length,
@@ -114,7 +116,9 @@
         humidityLabels.push(dateString);
       });
     });
-
+    console.log(points)
+    newData = points
+    console.log(newData)
     brushedData = points.slice(
       (brushExtents[0] || 0) * points.length,
       (brushExtents[1] || 1) * points.length
@@ -245,14 +249,13 @@
 </div>
 
 <div
-  class="uk-child-width-expand@s uk-text-center uk-height-large uk-align-center"
+  class="uk-child-width-expand@s uk-text-center uk-height-small uk-align-center"
 >
   <LayerCake
     padding={{ top: 5 }}
-    x={xKey}
-    y={yKey}
-    yDomain={[0, null]}
-    data={points}
+    x='x'
+    y='y'
+    data={newData}
   >
     <Svg>
       <Line stroke="#00e047" />
