@@ -70,7 +70,7 @@
       (brushExtents[0] || 0) * points.length,
       (brushExtents[1] || 1) * points.length
     );
-    console.log(points)
+    console.log(points);
     if (brushedData.length < 2) {
       brushedData = points.slice(
         brushExtents[0] * points.length,
@@ -116,9 +116,9 @@
         humidityLabels.push(dateString);
       });
     });
-    console.log(points)
-    newData = points
-    console.log(newData)
+    console.log(points);
+    newData = points;
+    console.log(newData);
     brushedData = points.slice(
       (brushExtents[0] || 0) * points.length,
       (brushExtents[1] || 1) * points.length
@@ -223,46 +223,49 @@
 </div>
 
 <div
-  class="uk-child-width-expand@s uk-text-center uk-height-large uk-align-center"
+  class="uk-card uk-card-default uk-card-large uk-card-body uk-box-shadow-large uk-width-3xlarge uk-margin uk-height-2xlarge uk-align-center"
 >
-  <LayerCake
-    padding={{ right: 10, bottom: 20, left: 25 }}
-    x={xKey}
-    y={yKey}
-    data={brushedData}
+  <div
+    class="uk-child-width-expand@s uk-text-center uk-height-large uk-align-center"
   >
-    <Svg>
-      <AxisX
-        ticks={(ticks) => {
-          const filtered = ticks.filter((t) => t % 1 === 0);
-          if (filtered.length > 7) {
-            return filtered.filter((t, i) => i % 2 === 0);
-          }
-          return filtered;
-        }}
-      />
-      <AxisY ticks={4} />
-      <Line stroke="#00e047" />
-      <Area fill="#00e04710" />
-    </Svg>
-  </LayerCake>
-</div>
+    <h3>Temperature Data</h3>
+    <LayerCake
+      padding={{ right: 10, bottom: 20, left: 25 }}
+      x={xKey}
+      y={yKey}
+      data={brushedData}
+    >
+      <Svg>
+        <AxisX
+          ticks={(ticks) => {
+            const filtered = ticks.filter((t) => t % 1 === 0);
+            if (filtered.length > 7) {
+              return filtered.filter((t, i) => i % 2 === 0);
+            }
+            return filtered;
+          }}
+        />
+        <AxisY ticks={4} />
+        <Line stroke="#00e047" />
+        <Area fill="#00e04710" />
+      </Svg>
+    </LayerCake>
+  </div>
 
-<div
-  class="uk-child-width-expand@s uk-text-center uk-height-small uk-align-center"
->
-  <LayerCake
-    padding={{ top: 5 }}
-    x='x'
-    y='y'
-    data={newData}
+  <div
+    class="uk-padding uk-child-width-expand@s uk-text-center uk-height-small uk-align-center"
   >
-    <Svg>
-      <Line stroke="#00e047" />
-      <Area fill="#00e04710" />
-    </Svg>
-    <Html>
-      <Brush bind:min={brushExtents[0]} bind:max={brushExtents[1]} />
-    </Html>
-  </LayerCake>
+    <LayerCake padding={{ top: 5 }} x="x" y="y" data={newData}>
+      <Svg>
+        <Line stroke="#00e047" />
+        <Area fill="#00e04710" />
+      </Svg>
+      <Html>
+        <Brush bind:min={brushExtents[0]} bind:max={brushExtents[1]} />
+      </Html>
+    </LayerCake>
+    <div class="uk-padding">
+      <h3>Click and Drag to zoom</h3>
+    </div>
+  </div>
 </div>
