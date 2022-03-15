@@ -7,7 +7,9 @@
     "serve": "vite preview"
   },
   "devDependencies": {
+    "@carbon/charts-svelte": "^0.55.1",
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.7",
+    "d3": "^7.3.0",
     "layercake": "^6.1.0",
     "svelte": "^3.46.4",
     "vite": "^2.3.0",
@@ -20,8 +22,8 @@
     "@hapi/joi": "^17.1.1",
     "@hapi/vision": "^6.0.1",
     "axios": "^0.21.1",
+    "carbon-components": "^10.40.0",
     "cloudinary": "^1.25.1",
-    "d3": "^7.3.0",
     "dotenv": "^10.0.0",
     "frappe-charts": "^1.6.2",
     "handlebars": "^4.7.7",
