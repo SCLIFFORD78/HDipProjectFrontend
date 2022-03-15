@@ -187,154 +187,84 @@
       <PhotoWidget />
     </div>
   </div>
-</div>
-
-<div class="uk-child-width-1-2@s" uk-grid>
-  {#each datasets as dataset}
-    <div
-      class="uk-height-large uk-card uk-card-default uk-card-body uk-flex uk-flex-center uk-flex-middle"
-    >
-      <h3>lable</h3>
-      <SyncedBrushWrapper
-        data={dataset}
-        {xKey}
-        {yKey}
-        bind:min={brushExtents[0]}
-        bind:max={brushExtents[1]}
-      />
-    </div>
-  {/each}
-</div>
-
-<div
-  class="uk-card uk-card-default uk-card-large uk-card-body uk-box-shadow-large uk-width-3xlarge uk-margin uk-height-2xlarge uk-align-center"
->
-  <div
-    class="uk-child-width-expand@s uk-text-center uk-height-large uk-align-center"
-  >
-    <h3>Temperature Data</h3>
-    <LayerCake
-      padding={{ right: 10, bottom: 20, left: 25 }}
-      x={xKey}
-      y={yKey}
-      z={zKey}
-      data={brushedData}
-    >
-      <Svg>
-        <AxisX
-          ticks={(ticks) => {
-            const filtered = ticks.filter((t) => t % 1 === 0);
-            if (filtered.length > 7) {
-              return filtered.filter((t, i) => i % 2 === 0);
-            }
-            return filtered;
-          }}
-        />
-        <AxisY ticks={4} />
-        <Line stroke="#00e047" />
-        <Area fill="#00e04710" />
-      </Svg>
-    </LayerCake>
+  <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-margin">
+    <LineChart
+      data={newCombinedData}
+      options={{
+        title: "Line (time series) - Zoom bar enabled",
+        axes: {
+          bottom: {
+            title: "2019 Annual Sales Figures",
+            mapsTo: "date",
+            scaleType: "time",
+          },
+          left: {
+            mapsTo: "value",
+            title: "Conversion rate",
+            scaleType: "linear",
+          },
+        },
+        curve: "curveMonotoneX",
+        experimental: true,
+        zoomBar: {
+          top: {
+            enabled: true,
+          },
+        },
+        height: "400px",
+      }}
+    />
   </div>
-
-  <div
-    class="uk-padding uk-child-width-expand@s uk-text-center uk-height-small uk-align-center"
-  >
-    <LayerCake padding={{ top: 5 }} x="x" y="y" data={newData}>
-      <Svg>
-        <Line stroke="#00e047" />
-        <Area fill="#00e04710" />
-      </Svg>
-      <Html>
-        <Brush bind:min={brushExtents[0]} bind:max={brushExtents[1]} />
-      </Html>
-    </LayerCake>
-    <div class="uk-padding">
-      <h3>Click and Drag to zoom</h3>
-    </div>
+  <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-margin">
+    <ComboChart
+      data={newCombinedData}
+      options={{
+        title: "Combo (Line + Area) Time series",
+        points: {
+          enabled: false,
+        },
+        axes: {
+          left: {
+            title: "Hive Temp",
+            mapsTo: "value",
+          },
+          bottom: {
+            scaleType: "time",
+            mapsTo: "date",
+          },
+          right: {
+            title: "Temperature (°C)",
+            mapsTo: "value",
+            correspondingDatasets: ["Ambient Temp"],
+          },
+        },
+        comboChartTypes: [
+          {
+            type: "area",
+            options: {},
+            correspondingDatasets: ["Ambient Temp"],
+          },
+          {
+            type: "line",
+            options: {
+              points: {
+                enabled: true,
+              },
+            },
+            correspondingDatasets: ["Hive Temp"],
+          },
+        ],
+        curve: "curveNatural",
+        zoomBar: {
+          top: {
+            enabled: true,
+          },
+        },
+        timeScale: {
+          addSpaceOnEdges: 0,
+        },
+        height: "400px",
+      }}
+    />
   </div>
 </div>
-<LineChart
-  data={newCombinedData}
-  options={{
-    "title": "Line (time series) - Zoom bar enabled",
-    "axes": {
-      "bottom": {
-        "title": "2019 Annual Sales Figures",
-        "mapsTo": "date",
-        "scaleType": "time"
-      },
-      "left": {
-        "mapsTo": "value",
-        "title": "Conversion rate",
-        "scaleType": "linear"
-      }
-    },
-    "curve": "curveMonotoneX",
-    "experimental": true,
-    "zoomBar": {
-      "top": {
-        "enabled": true
-      }
-    },
-    "height": "400px"
-  }}
-/>
-
-<ComboChart
-	data={newCombinedData}
-	options={{
-	"title": "Combo (Line + Area) Time series",
-	"points": {
-		"enabled": false
-	},
-	"axes": {
-		"left": {
-			"title": "Hive Temp",
-			"mapsTo": "value"
-		},
-		"bottom": {
-			"scaleType": "time",
-			"mapsTo": "date"
-		},
-		"right": {
-			"title": "Temperature (°C)",
-			"mapsTo": "value",
-			"correspondingDatasets": [
-				"Ambient Temp"
-			]
-		}
-	},
-	"comboChartTypes": [
-		{
-			"type": "area",
-			"options": {},
-			"correspondingDatasets": [
-				"Ambient Temp"
-			]
-		},
-		{
-			"type": "line",
-			"options": {
-				"points": {
-					"enabled": true
-				}
-			},
-			"correspondingDatasets": [
-				"Hive Temp"
-			]
-		}
-	],
-	"curve": "curveNatural",
-  "zoomBar": {
-      "top": {
-        "enabled": true
-      }
-    },
-	"timeScale": {
-		"addSpaceOnEdges": 0
-	},
-	"height": "400px"
-}}
-	/>
-
