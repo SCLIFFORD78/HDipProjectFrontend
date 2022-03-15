@@ -45,9 +45,7 @@
   var historicalData = [];
   var historicalHumidityData = [];
   var newCombinedData = [];
-  var temp = [];
-  var temp2 = [];
-  var temp3 = [];
+
 
   var datasets = [newData, historicalData];
   $: {
@@ -64,40 +62,6 @@
     }
   }
 
-  let data = {
-    labels: [],
-    datasets: [
-      {
-        name: "Hive",
-        values: [],
-        lineOptions: {
-          regionFill: 1, // default: 0
-          hideDots: 1,
-        },
-        axisOptions: {
-          xIsSeries: 1, // default: 0
-        },
-      },
-      {
-        name: "Enviroment",
-        values: [],
-        lineOptions: {
-          regionFill: 1, // default: 0
-          hideDots: 1,
-        },
-        axisOptions: {
-          xIsSeries: 1, // default: 0
-        },
-      },
-    ],
-    lineOptions: {
-      regionFill: 1, // default: 0
-      hideDots: 1,
-    },
-    axisOptions: {
-      xIsSeries: 1, // default: 0
-    },
-  };
 
   const hive = hiveTracker.selectedHive[0];
   var values = JSON.parse("[" + hive["recordedData"] + "]");
@@ -158,25 +122,7 @@
             z: element["Temperature"],
           });
         });
-        combinedPoints.sort((a, b) => (a.x > b.x ? 1 : -1));
-        let tempz = 0;
-        let tempy = 0;
-        for (let index = 0; index < combinedPoints.length; index++) {
-          const element = combinedPoints[index];
-          temp.push(element["x"]);
-          if (element["y"]) {
-            tempy = element["y"];
-            temp2.push(element["y"]);
-          } else {
-            temp2.push(tempy);
-          }
-          if (element["z"]) {
-            tempz = element["z"];
-            temp3.push(element["z"]);
-          } else {
-            temp3.push(tempz);
-          }
-        }
+
         brushedData = points.slice(
           (brushExtents[0] || 0) * points.length,
           (brushExtents[1] || 1) * points.length
@@ -188,10 +134,6 @@
           );
         }
 
-        data.labels = temp;
-        data.datasets[0].values = temp2;
-        data.datasets[1].values = temp3;
-        console.log(data);
       }
     } catch (error) {
       errorMessage = "Weather Details unavailable";
