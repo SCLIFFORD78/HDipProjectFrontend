@@ -15,6 +15,10 @@
   import MultiLine from "../components/MultiLine.svelte";
   import Labels from "../components/GroupLabels.html.svelte";
   import SharedTooltip from "../components/SharedTooltip.html.svelte";
+  import "@carbon/charts/styles.min.css";
+  import "carbon-components/css/carbon-components.min.css";
+  import { LineChart } from "@carbon/charts-svelte";
+  import { ComboChart } from "@carbon/charts-svelte";
 
   const hiveTracker = getContext("HiveTracker");
 
@@ -46,7 +50,6 @@
   var historicalHumidityData = [];
   var newCombinedData = [];
 
-
   var datasets = [newData, historicalData];
   $: {
     brushedData = points.slice(
@@ -61,7 +64,6 @@
       );
     }
   }
-
 
   const hive = hiveTracker.selectedHive[0];
   var values = JSON.parse("[" + hive["recordedData"] + "]");
@@ -80,9 +82,14 @@
     points.push({ x: element["timeStamp"], y: element["Temperature"] });
     humidityPoints.push({ x: element["timeStamp"], y: element["Humidity"] });
     combinedPoints.push({
-      x: element["timeStamp"],
-      y: element["Temperature"],
-      z: null,
+      group: "Hive Temp",
+      date: theDate.toISOString(),
+      value: element["Temperature"],
+    });
+    combinedPoints.push({
+      group: "Hive Humidity",
+      date: theDate.toISOString(),
+      value: element["Humidity"],
     });
   });
 
@@ -98,7 +105,7 @@
       );
       if (weatherHistory.length > 0) {
         weatherHistory.forEach((element) => {
-          var theDate = new Date(element["timeStamp"]);
+          var theDate = new Date(element["timeStamp"] * 1000);
           var dateString =
             theDate.toLocaleDateString() +
             " " +
@@ -117,9 +124,14 @@
             y: element["Humidity"],
           });
           combinedPoints.push({
-            x: element["timeStamp"],
-            y: null,
-            z: element["Temperature"],
+            group: "Ambient Temp",
+            date: theDate.toISOString(),
+            value: element["Temperature"],
+          });
+          combinedPoints.push({
+            group: "Ambient Humidity",
+            date: theDate.toISOString(),
+            value: element["Humidity"],
           });
         });
 
@@ -133,7 +145,6 @@
             brushExtents[0] * points.length + 2
           );
         }
-
       }
     } catch (error) {
       errorMessage = "Weather Details unavailable";
@@ -183,6 +194,7 @@
     <div
       class="uk-height-large uk-card uk-card-default uk-card-body uk-flex uk-flex-center uk-flex-middle"
     >
+      <h3>lable</h3>
       <SyncedBrushWrapper
         data={dataset}
         {xKey}
@@ -242,3 +254,87 @@
     </div>
   </div>
 </div>
+<LineChart
+  data={newCombinedData}
+  options={{
+    "title": "Line (time series) - Zoom bar enabled",
+    "axes": {
+      "bottom": {
+        "title": "2019 Annual Sales Figures",
+        "mapsTo": "date",
+        "scaleType": "time"
+      },
+      "left": {
+        "mapsTo": "value",
+        "title": "Conversion rate",
+        "scaleType": "linear"
+      }
+    },
+    "curve": "curveMonotoneX",
+    "experimental": true,
+    "zoomBar": {
+      "top": {
+        "enabled": true
+      }
+    },
+    "height": "400px"
+  }}
+/>
+
+<ComboChart
+	data={newCombinedData}
+	options={{
+	"title": "Combo (Line + Area) Time series",
+	"points": {
+		"enabled": false
+	},
+	"axes": {
+		"left": {
+			"title": "Hive Temp",
+			"mapsTo": "value"
+		},
+		"bottom": {
+			"scaleType": "time",
+			"mapsTo": "date"
+		},
+		"right": {
+			"title": "Temperature (°C)",
+			"mapsTo": "value",
+			"correspondingDatasets": [
+				"Ambient Temp"
+			]
+		}
+	},
+	"comboChartTypes": [
+		{
+			"type": "area",
+			"options": {},
+			"correspondingDatasets": [
+				"Ambient Temp"
+			]
+		},
+		{
+			"type": "line",
+			"options": {
+				"points": {
+					"enabled": true
+				}
+			},
+			"correspondingDatasets": [
+				"Hive Temp"
+			]
+		}
+	],
+	"curve": "curveNatural",
+  "zoomBar": {
+      "top": {
+        "enabled": true
+      }
+    },
+	"timeScale": {
+		"addSpaceOnEdges": 0
+	},
+	"height": "400px"
+}}
+	/>
+
