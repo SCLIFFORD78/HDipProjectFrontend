@@ -5,7 +5,7 @@
 
   let selectedType = 0;
   let type = ["All", "Super", "National", "Langstroth", "Top Bar", "Warré"];
-  export let expFilter ;
+  export let expFilter;
   let hiveList;
   let errorMessage = " ";
   export let filter = [];
@@ -14,21 +14,21 @@
   onMount(async () => {
     hiveList = await hiveTracker.getHives();
     for (var i = 0; i < hiveList.length; i++) {
-      var owner = await hiveTracker.getUser(hiveList[i].owner);
-      if (owner) {
-        hiveList[i].owner = owner.firstName.concat(" ", owner.lastName);
+      var user = await hiveTracker.getUser(hiveList[i].user);
+      if (user) {
+        hiveList[i].user = user.firstName.concat(" ", user.secondName);
       }
-    };
+    }
+    hiveList.sort((a,b)=> a.tag - b.tag)
     filter = hiveList;
 
     if (hiveList) {
       expFilter({
         filter: filter,
-        match: match
-        })
-        };
-    });
-
+        match: match,
+      });
+    }
+  });
 
   function select() {
     filter = hiveList;
@@ -42,12 +42,12 @@
           }
         }
         for (var i = 0; i < hiveList.length; i++) {
-          if (hiveList[i].hiveType == match) {
+          if (hiveList[i].type == match) {
             filter.push(hiveList[i]);
           }
         }
       }
-      expFilter({filter: filter})
+      expFilter({ filter: filter });
     }
   }
 </script>

@@ -30,7 +30,7 @@
     hives.forEach(hive=>{
       types.forEach(type => {
         if (hive.type == type) {
-          const hiveStr = `Hive No.${hive.fbId.toString()}`;
+          const hiveStr = `Hive No.${hive.tag.toString()} ${hive.type.toString()}`;
 
           marker = map.addMarker({lat: hive.location.lat, lng: hive.location.lng}, hiveStr, hive.type, false);
         }

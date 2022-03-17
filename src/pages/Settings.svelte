@@ -16,7 +16,7 @@
   onMount(async () => {
     adminSelection = true;
     const loggedInUser = await hiveTracker.getUserByEmail($user.email);
-    if (loggedInUser.admin == true) {
+    if (loggedInUser.data.admin == true) {
       loggedUser = true;
     } else {
       loggedUser = false;

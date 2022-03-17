@@ -29,7 +29,7 @@ export let mainBar = [
     link: "/#/analysis",
   },
   {
-    title: "Donation Map",
+    title: "Hive Location Map",
     icon: "fas fa-map-marked-alt fa-3x",
     colour: "rgb(102, 153, 255)",
     link: "/#/Map",

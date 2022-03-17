@@ -3,6 +3,7 @@
   import { push } from "svelte-spa-router";
   import Coordinates from "./Coordinates.svelte";
   import Filter from "../components/Filter.svelte";
+  import { user } from "../stores";
 
   export let selectedHiveInfo;
   let filter = [];
@@ -10,6 +11,7 @@
   let hives = [];
 
   const hiveTracker = getContext("HiveTracker");
+
 
   async function selectedHive(hive) {
     await hiveTracker.getHive(hive.target.value).then((selectedHive) => {
@@ -21,6 +23,7 @@
       push("/HiveDetail");
     });
   }
+  
 
   function expFilter() {
     hives = filter;
@@ -42,7 +45,7 @@
       {#if filter}
         {#each filter as hive}
           <tr>
-            <td>{hive.fbId}</td>
+            <td>{hive.tag}</td>
             <td>{hive.type}</td>
             <td> {hive.user} </td>
             <td>

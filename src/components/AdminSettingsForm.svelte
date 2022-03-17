@@ -63,10 +63,10 @@
     <tbody class="uk-text-left">
       {#each allUsers as user}
         <tr>
-          <td> {user.memberNumber} </td>
+          <td> {user.fbid} </td>
           <td> {user.email} </td>
           <td> {user.admin} </td>
-          <td> {user.firstName} {user.lastName} </td>
+          <td> {user.firstName} {user.secondName} </td>
           <td>
             <div class="uk-column-1-2">
               <div class="uk-margin">
@@ -75,7 +75,7 @@
                   class="submit uk-button uk-button-primary uk-button-small uk-width-1-1"
                   on:click={toggleAdmin}
                   onclick="return confirm('Are you sure you want to update User Admin Rights?')"
-                  value={user._id}
+                  value={user.fbid}
                   >Admin
                 </button>
               </div>

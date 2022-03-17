@@ -7,6 +7,7 @@
   import "carbon-components/css/carbon-components.min.css";
   import { LineChart } from "@carbon/charts-svelte";
   import { ComboChart } from "@carbon/charts-svelte";
+  
 
   const hiveTracker = getContext("HiveTracker");
 
@@ -80,7 +81,7 @@
     <div
       class="uk-card uk-card-default uk-card-hover uk-card-body uk-margin uk-column-1-4"
     >
-      <h3 class="uk-card-title">Hive Number: {hive.fbId}</h3>
+      <h3 class="uk-card-title">Hive Number: {hive.tag}</h3>
       <p>FeelsLike: {weather.feelsLike} Celcus</p>
       <p>Cloud Cover: {weather.clouds}</p>
       <p>Wind Speed: {weather.windSpeed} Kph</p>
