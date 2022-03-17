@@ -86,7 +86,7 @@
                     class="uk-button uk-button-danger uk-button-small uk-width-1-1"
                     on:click={deleteOneUser}
                     onclick="return confirm('Are you sure you want to DELETE member\nCANNOT be reversed?')"
-                    value={user._id}
+                    value={user.fbid}
                     >Delete
                   </button>
                 </div>
