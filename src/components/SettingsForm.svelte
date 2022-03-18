@@ -4,7 +4,7 @@
 
   let loggedInUser;
   let firstName = "";
-  let lastName = "";
+  let secondName = "";
   let email = $user.email;
   let password = ""
   let message = "";
@@ -12,9 +12,16 @@
   const hiveTracker = getContext("HiveTracker");
 
   async function save() {
-    //loggedInUser = await hiveTracker.getUserByEmail($user.email);
-    console.log(firstName, lastName, email, password, loggedInUser._id);
-    let success = await hiveTracker.update(firstName, lastName, email, password, loggedInUser._id)
+    loggedInUser = await hiveTracker.getUserByEmail($user.email);
+    console.log(loggedInUser)
+    console.log(firstName, secondName, email, password, loggedInUser.data.fbid);
+    if(typeof firstName == "undefined"){
+      firstName = loggedInUser.data.firstName
+    }
+    if(typeof secondName == "undefined"){
+      secondName = loggedInUser.data.secondName
+    }
+    let success = await hiveTracker.update(firstName, secondName, email, password, loggedInUser.data.fbid)
     if (success) {
       message = "Settings updated";
     } else {
@@ -25,7 +32,7 @@
   onMount(async () => {
     loggedInUser = await hiveTracker.getUserByEmail($user.email);
     firstName = loggedInUser.firstName;
-    lastName = loggedInUser.lastName;
+    secondName = loggedInUser.secondName;
   });
 </script>
 
@@ -42,7 +49,7 @@
     <div class="uk-margin">
       <label class="uk-form-label" >Last name must begin with a capitol letter</label>
       <div class="uk-inline uk-width-1-1">
-        <span class="uk-form-icon" uk-icon="icon: user"></span> <input bind:value={lastName}
+        <span class="uk-form-icon" uk-icon="icon: user"></span> <input bind:value={secondName}
                                                                        class="uk-input uk-form-large" type="text"
                                                                        name="lastName">
       </div>

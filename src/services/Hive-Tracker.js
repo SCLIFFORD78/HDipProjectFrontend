@@ -35,6 +35,12 @@ export class HiveTracker {
   }
 
   async logout() {
+    
+    try {
+      const response = await axios.post(`${this.baseUrl}/api/users/logout`);
+    } catch (error) {
+      console.log(error)
+    }
     user.set({
       email: "",
       token: ""
