@@ -49,7 +49,8 @@
       );
       weatherHistory = await hiveTracker.readWeatherHistory(
         hive.location.lat,
-        hive.location.lng
+        hive.location.lng,
+        hive.dateRegistered
       );
       if (weatherHistory.length > 0) {
         weatherHistory.forEach((element) => {

@@ -275,11 +275,12 @@ export class HiveTracker {
     }
   }
 
-  async readWeatherHistory(latitude, longtitude) {
+  async readWeatherHistory(latitude, longtitude, dateLogged) {
 
     const location = {
       latitude: latitude,
-      longtitude: longtitude
+      longtitude: longtitude,
+      dateLogged:dateLogged
     }
     try {
 
