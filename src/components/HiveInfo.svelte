@@ -66,12 +66,12 @@
     const loggedInUser = await hiveTracker.getUserByEmail($user.email);
     const loggedInUserHives = await hiveTracker.getHiveByOwner(loggedInUser.data.fbid);
     loggedInUserHives.forEach(loggedInUserHive => {
-      if (loggedInUserHive.fbId == hive.fbId) {
+      if (loggedInUserHive.fbId == hive.fbId ) {
         deleteHive = true;
         
       }
     });
-    if (deleteHive ||loggedInUser.admin) {
+    if (deleteHive ||loggedInUser.data.admin) {
       const success = await hiveTracker.deleteOneHive(hive.fbId);
     if (success) {
       push("/hives")

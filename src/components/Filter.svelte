@@ -1,6 +1,6 @@
 <script>
   import { onMount, getContext } from "svelte";
-
+  
   const hiveTracker = getContext("HiveTracker");
 
   let selectedType = 0;

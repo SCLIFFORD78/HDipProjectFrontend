@@ -3,7 +3,6 @@
   import { push } from "svelte-spa-router";
   import Coordinates from "./Coordinates.svelte";
   import Filter from "../components/Filter.svelte";
-  import { user } from "../stores";
 
   export let selectedHiveInfo;
   let filter = [];

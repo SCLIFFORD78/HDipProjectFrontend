@@ -35,7 +35,7 @@
     const userHives = await hiveTracker.getHiveByOwner(id.target.value);
     if (userHives) {
       for (let index = 0; index < userHives.length; index++) {
-        const removeHives = await hiveTracker.deleteOneHive(userHives[index]._id);
+        const removeHives = await hiveTracker.deleteOneHive(userHives[index].fbId);
         console.log("User hive removed before deleting account: " + removeHives);
       }
     }

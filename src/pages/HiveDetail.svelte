@@ -7,6 +7,7 @@
   import "carbon-components/css/carbon-components.min.css";
   import { LineChart } from "@carbon/charts-svelte";
   import { ComboChart } from "@carbon/charts-svelte";
+  import { user } from "../stores";
   
 
   const hiveTracker = getContext("HiveTracker");
@@ -14,6 +15,7 @@
   let weather = [];
   let weatherHistory = [];
   let errorMessage = "";
+  let loggedInUser;
 
   title.set("Hive Tracker App");
   subTitle.set("Hive Details");
@@ -43,6 +45,7 @@
 
   onMount(async () => {
     try {
+      loggedInUser = await hiveTracker.getUserByEmail($user.email);
       weather = await hiveTracker.getWeather(
         hive.location.lat,
         hive.location.lng
