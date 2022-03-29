@@ -68,6 +68,7 @@
       }
       
     });
+    map.showZoomControl();
     map.showLayerControl();
   }
 
