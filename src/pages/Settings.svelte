@@ -22,40 +22,32 @@
     }
   });
 
-  function ownAccount() {
-    adminSelection = true;
-  }
 
   function adminAccount() {
-    adminSelection = false;
+    if (adminSelection) {
+      adminSelection = false
+    } else {
+      adminSelection = true
+    }
   }
 
   navBar.set({
     bar: mainBar,
   });
 </script>
-
 {#if loggedUser == true}
   <div class="uk-column-1-2 uk-padding">
     <div class="uk-margin uk-align-right">
       <button
-        on:click={ownAccount}
-        class="uk-button uk-button-default"
-        type="button"
-        ><span uk-icon="user" />
-
-        select user management
-      </button>
-    </div>
-
-    <div class="uk-margin uk-align-center">
-      <button
-        on:click={adminAccount}
-        class="uk-button uk-button-default"
-        type="button"><span uk-icon="users"></span>
-
-         select members management</button
-      >
+          on:click={adminAccount}
+          href="#toggle-animation"
+          class="uk-button uk-button-default"
+          type="button"
+          >{#if adminSelection == true}<span uk-icon="users" /> Select User Management
+            
+          {/if}{#if adminSelection == false}<span uk-icon="user" /> Select Admin User
+          {/if}</button
+        >
     </div>
   </div>
 {/if}
