@@ -8,6 +8,7 @@
   import { LineChart } from "@carbon/charts-svelte";
   import { ComboChart } from "@carbon/charts-svelte";
   import { user } from "../stores";
+import { push } from "svelte-spa-router";
   
 
   const hiveTracker = getContext("HiveTracker");
@@ -24,19 +25,22 @@
   });
 
 
-  var combinedPoints = [];
-  var newCombinedData = [];
+  var combinedPointsTemperature = [];
+  var combinedPointsHumidity = [];
+  var newCombinedDataTemperature = [];
+  var newCombinedDataHumidity = [];
+
 
   const hive = hiveTracker.selectedHive[0];
   var values = JSON.parse("[" + hive["recordedData"] + "]");
   values.forEach((element) => {
     var theDate = new Date(element["timeStamp"] * 1000);
-    combinedPoints.push({
+    combinedPointsTemperature.push({
       group: "Hive Temp",
       date: theDate.toISOString(),
       value: element["Temperature"],
     });
-    combinedPoints.push({
+    combinedPointsHumidity.push({
       group: "Hive Humidity",
       date: theDate.toISOString(),
       value: element["Humidity"],
@@ -58,12 +62,12 @@
       if (weatherHistory.length > 0) {
         weatherHistory.forEach((element) => {
           var theDate = new Date(element["timeStamp"] * 1000);
-          combinedPoints.push({
+          combinedPointsTemperature.push({
             group: "Ambient Temp",
             date: theDate.toISOString(),
             value: element["Temperature"],
           });
-          combinedPoints.push({
+          combinedPointsHumidity.push({
             group: "Ambient Humidity",
             date: theDate.toISOString(),
             value: element["Humidity"],
@@ -75,7 +79,8 @@
       errorMessage = "Weather Details unavailable";
       console.log(error);
     }
-    newCombinedData = combinedPoints;
+    newCombinedDataTemperature = combinedPointsTemperature;
+    newCombinedDataHumidity = combinedPointsHumidity;
 
   });
 </script>
@@ -102,45 +107,20 @@
       <PhotoWidget />
     </div>
   </div>
-  <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-margin">
-    <LineChart
-      data={newCombinedData}
-      options={{
-        title: "Line (time series) - Zoom bar enabled",
-        axes: {
-          bottom: {
-            title: "2019 Annual Sales Figures",
-            mapsTo: "date",
-            scaleType: "time",
-          },
-          left: {
-            mapsTo: "value",
-            title: "Conversion rate",
-            scaleType: "linear",
-          },
-        },
-        curve: "curveMonotoneX",
-        experimental: true,
-        zoomBar: {
-          top: {
-            enabled: true,
-          },
-        },
-        height: "400px",
-      }}
-    />
-  </div>
+
+
   <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-margin">
     <ComboChart
-      data={newCombinedData}
+      data={newCombinedDataTemperature}
       options={{
-        title: "Combo (Line + Area) Time series",
+        title: "Values of Hive Temperature (If recorded) and ambient Temperature",
         points: {
           enabled: false,
+          radius: 0
         },
         axes: {
           left: {
-            title: "Hive Temp",
+            title: "Temperature",
             mapsTo: "value",
           },
           bottom: {
@@ -173,6 +153,61 @@
         zoomBar: {
           top: {
             enabled: true,
+          },
+        },
+        timeScale: {
+          addSpaceOnEdges: 0,
+        },
+        height: "400px",
+      }}
+    />
+  </div>
+
+  <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-margin">
+    <ComboChart
+      data={newCombinedDataHumidity}
+      options={{
+        title: "Values of Hive Humidity (If recorded) and ambient Humidity",
+        points: {
+          enabled: false,
+          radius: 0
+        },
+        axes: {
+          left: {
+            title: "Humidity",
+            mapsTo: "value",
+          },
+          bottom: {
+            scaleType: "time",
+            mapsTo: "date",
+          },
+          right: {
+            title: "Humidity (%)",
+            mapsTo: "value",
+            correspondingDatasets: ["Hive Humidity"],
+          },
+        },
+        comboChartTypes: [
+          {
+            type: "area",
+            options: {},
+            correspondingDatasets: ["Hive Humidity"],
+          },
+          {
+            type: "line",
+            options: {
+              points: {
+                enabled: true,
+              },
+            },
+            correspondingDatasets: ["Ambient Humidity"],
+          },
+        ],
+        curve: "curveNatural",
+        zoomBar: {
+          top: {
+            enabled: true,
+            updateRangeAxis: true
           },
         },
         timeScale: {

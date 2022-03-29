@@ -1,10 +1,9 @@
 <script>
   import HiveList from "../components/HiveList.svelte";
   import beehive from "/src/assets/beehive.jpg";
-  import {navBar, mainBar, subTitle, title} from "../stores"
+  import {navBar, mainBar, subTitle, title, user} from "../stores"
 
   function selectedHiveInfo(hive){
-    console.log(hive);
   };
 
   

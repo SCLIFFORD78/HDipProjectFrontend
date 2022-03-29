@@ -1,9 +1,8 @@
 <script lang="ts">
-  import { mainBar, navBar, subTitle, title } from "../stores";
+  import { mainBar, navBar, subTitle, title , user} from "../stores";
   import hive from "/src/assets/beehive.jpg";
   import SettingsForm from "../components/SettingsForm.svelte";
   import AdminSettingsForm from "../components/AdminSettingsForm.svelte";
-  import { user } from "../stores";
   import { onMount, getContext } from "svelte";
 
   const hiveTracker = getContext("HiveTracker");

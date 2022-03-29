@@ -21,11 +21,11 @@ export interface MapConfig {
 var myIcon = L.icon({
   iconUrl: 'src\\assets\\bumblebee-honey-bee-icon-png-favpng-MZSpn1HbbLY4S7fGw0czxtSux-removebg-preview.png',
   iconSize: [48, 48],
-  iconAnchor: [22, 94],
-  popupAnchor: [-3, -76],
+  iconAnchor: [24, 36],
+  popupAnchor: [-3, -76]
   //shadowUrl: 'my-icon-shadow.png',
-  shadowSize: [68, 95],
-  shadowAnchor: [22, 94]
+  //shadowSize: [68, 95],
+  //shadowAnchor: [22, 94]
 });
 
 export class LeafletMap {
@@ -143,6 +143,7 @@ export class LeafletMap {
         this.closePopup();
       });
       marker.on('click', function (e) {
+        console.log(e)
         push("/hives")
       });
        

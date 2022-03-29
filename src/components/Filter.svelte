@@ -16,7 +16,7 @@
     for (var i = 0; i < hiveList.length; i++) {
       var user = await hiveTracker.getUser(hiveList[i].user);
       if (user) {
-        hiveList[i].user = user.firstName.concat(" ", user.secondName);
+        hiveList[i].userName = user.firstName.concat(" ", user.secondName);
       }
     }
     hiveList.sort((a,b)=> a.tag - b.tag)
@@ -108,7 +108,7 @@
     />
     {type[4]}
   </label><br />
-  <label
+  <label  class="uk-padding-small  uk-padding-remove-bottom"
     ><input
       bind:group={selectedType}
       value={5}

@@ -1,6 +1,6 @@
 <script>
   //import 'leaflet/dist/leaflet.css';
-  import {mainBar, navBar, subTitle, title} from "../stores"
+  import {mainBar, navBar, subTitle, title, user} from "../stores"
   import {LeafletMap} from '../services/leaflet-map';
   import {getContext, onMount} from "svelte";
 
@@ -18,6 +18,7 @@
   let map;
 
   onMount(async () => {
+    const loggedInUser = await hiveTracker.getUserByEmail($user.email);
     const mapConfig = {
       location: {lat: latitude, lng: longtitude},
       zoom: 11,
@@ -26,7 +27,12 @@
     map = new LeafletMap("hive-map", mapConfig, 'Terrain');
     
     map.showZoomControl();
-    hives = await hiveTracker.getHives();
+    if(loggedInUser.data.admin == false){
+      hives = await hiveTracker.getHiveByOwner(loggedInUser.data.fbid)
+    }else{
+      hives = await hiveTracker.getHives();
+    }
+    
     hives.forEach(hive=>{
       types.forEach(type => {
         if (hive.type == type) {
