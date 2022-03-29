@@ -44,7 +44,7 @@
 
   async function addHiveComment() {
     const success = await hiveTracker.addHiveComment(hive.fbId, comment);
-    if (success) {
+    if (success["success"]==true) {
       hive = await hiveTracker.getHive(hive.fbId);
     } else {
       errorMessage = "Comment not added - error occurred";
@@ -54,8 +54,9 @@
   async function deleteHiveComment(comment_id) {
     const _id = comment_id.target.value;
     const success = await hiveTracker.deleteHiveComment(hive.fbId, _id);
-    if (success) {
+    if (success["success"]==true) {
       hive = await hiveTracker.getHive(hive.fbId);
+
     } else {
       errorMessage = "Comment not removed - error occurred";
     }

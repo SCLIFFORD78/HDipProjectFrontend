@@ -37,15 +37,26 @@
 </script>
 
 {#if loggedUser == true}
-  <div class="uk-margin uk-align-center">
-    <button class="uk-button uk-button-default" type="button"
-      >select admin management</button
-    >
-    <div uk-dropdown>
-      <ul class="uk-nav uk-dropdown-nav">
-        <li class="uk-active " on:click={ownAccount} >Own Account</li>
-        <li class="uk-active" on:click={adminAccount}>Member Admin</li>
-      </ul>
+  <div class="uk-column-1-2 uk-padding">
+    <div class="uk-margin uk-align-right">
+      <button
+        on:click={ownAccount}
+        class="uk-button uk-button-default"
+        type="button"
+        ><span uk-icon="user" />
+
+        select user management
+      </button>
+    </div>
+
+    <div class="uk-margin uk-align-center">
+      <button
+        on:click={adminAccount}
+        class="uk-button uk-button-default"
+        type="button"><span uk-icon="users"></span>
+
+         select members management</button
+      >
     </div>
   </div>
 {/if}
@@ -54,28 +65,28 @@
     <div class=" uk-text-center">
       <AdminSettingsForm />
     </div>
-  {:else if (loggedUser == true && adminSelection ) || (loggedUser == false)}
+  {:else if (loggedUser == true && adminSelection) || loggedUser == false}
     <!--     <div class="uk-width-1-2@m ">
       <img width="300" src={hive} alt="hive" />
     </div> -->
-  
-  <div class="uk-container uk-margin">
-    <div
-      class="uk-child-width-expand uk-flex-center uk-flex-middle uk-text-center"
-      uk-grid
-    >
-      <div class="uk-width-auto@m">
-        <img width="300" src={hive} alt="hive" />
-      </div>
-      <div class="uk-width-expand@m">
-        <div
-          class="uk-card uk-card-default uk-width-xlarge uk-card-body uk-box-shadow-large"
-        >
-          <SettingsForm />
+
+    <div class="uk-container uk-margin">
+      <div
+        class="uk-child-width-expand uk-flex-center uk-flex-middle uk-text-center"
+        uk-grid
+      >
+        <div class="uk-width-auto@m">
+          <img width="300" src={hive} alt="hive" />
+        </div>
+        <div class="uk-width-expand@m">
+          <div
+            class="uk-card uk-card-default uk-width-xlarge uk-card-body uk-box-shadow-large"
+          >
+            <SettingsForm />
+          </div>
         </div>
       </div>
     </div>
-  </div>
   {/if}
 </div>
 
