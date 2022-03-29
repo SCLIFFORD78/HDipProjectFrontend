@@ -18,6 +18,16 @@ export interface MapConfig {
   minZoom: number;
 }
 
+var myIcon = L.icon({
+  iconUrl: 'src\\assets\\bumblebee-honey-bee-icon-png-favpng-MZSpn1HbbLY4S7fGw0czxtSux-removebg-preview.png',
+  iconSize: [48, 48],
+  iconAnchor: [22, 94],
+  popupAnchor: [-3, -76],
+  //shadowUrl: 'my-icon-shadow.png',
+  shadowSize: [68, 95],
+  shadowAnchor: [22, 94]
+});
+
 export class LeafletMap {
   imap: Map;
   control: LayerControl;
@@ -117,7 +127,7 @@ export class LeafletMap {
       });
       
     } else {
-      marker = L.marker([location.lat, location.lng]);
+      marker = L.marker([location.lat, location.lng], {icon: myIcon});
       position = marker.getLatLng();
 
     }
