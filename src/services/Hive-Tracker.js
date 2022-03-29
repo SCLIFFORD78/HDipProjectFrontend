@@ -275,16 +275,11 @@ export class HiveTracker {
     }
   }
 
-  async readWeatherHistory(latitude, longtitude, dateLogged) {
-
-    const location = {
-      latitude: latitude,
-      longtitude: longtitude,
-      dateLogged:dateLogged
-    }
+  async readWeatherHistory(hiveID) {
+    const fbid = {fbid:hiveID}
     try {
 
-      const response = await axios.post(this.baseUrl + "/api/hives/readWeatherHistory", location);
+      const response = await axios.post(this.baseUrl + "/api/hives/readWeatherHistory", fbid);
       return response.data;
     } catch (e) {
       return null;

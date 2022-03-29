@@ -25,27 +25,12 @@ import { push } from "svelte-spa-router";
   });
 
 
-  var combinedPointsTemperature = [];
-  var combinedPointsHumidity = [];
   var newCombinedDataTemperature = [];
   var newCombinedDataHumidity = [];
 
 
   const hive = hiveTracker.selectedHive[0];
-  var values = JSON.parse("[" + hive["recordedData"] + "]");
-  values.forEach((element) => {
-    var theDate = new Date(element["timeStamp"] * 1000);
-    combinedPointsTemperature.push({
-      group: "Hive Temp",
-      date: theDate.toISOString(),
-      value: element["Temperature"],
-    });
-    combinedPointsHumidity.push({
-      group: "Hive Humidity",
-      date: theDate.toISOString(),
-      value: element["Humidity"],
-    });
-  });
+
 
   onMount(async () => {
     try {
@@ -55,32 +40,15 @@ import { push } from "svelte-spa-router";
         hive.location.lng
       );
       weatherHistory = await hiveTracker.readWeatherHistory(
-        hive.location.lat,
-        hive.location.lng,
-        hive.dateRegistered
+        hive.fbId
       );
-      if (weatherHistory.length > 0) {
-        weatherHistory.forEach((element) => {
-          var theDate = new Date(element["timeStamp"] * 1000);
-          combinedPointsTemperature.push({
-            group: "Ambient Temp",
-            date: theDate.toISOString(),
-            value: element["Temperature"],
-          });
-          combinedPointsHumidity.push({
-            group: "Ambient Humidity",
-            date: theDate.toISOString(),
-            value: element["Humidity"],
-          });
-        });
+      newCombinedDataTemperature = weatherHistory["combinedPointsTemperature"]
+      newCombinedDataHumidity = weatherHistory["combinedPointsHumidity"]
 
-      }
     } catch (error) {
       errorMessage = "Weather Details unavailable";
       console.log(error);
     }
-    newCombinedDataTemperature = combinedPointsTemperature;
-    newCombinedDataHumidity = combinedPointsHumidity;
 
   });
 </script>
