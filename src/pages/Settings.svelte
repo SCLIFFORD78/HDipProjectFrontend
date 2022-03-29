@@ -36,20 +36,18 @@
   });
 </script>
 {#if loggedUser == true}
-  <div class="uk-column-1-2 uk-padding">
-    <div class="uk-margin uk-align-right">
+    <div class="uk-align-center uk-padding">
       <button
           on:click={adminAccount}
           href="#toggle-animation"
-          class="uk-button uk-button-default"
+          class="uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom "
           type="button"
-          >{#if adminSelection == true}<span uk-icon="users" /> Select User Management
+          >{#if adminSelection == true}<i class="fa-solid fa-users fa-2x"></i>    Select User Management
             
-          {/if}{#if adminSelection == false}<span uk-icon="user" /> Select Admin User
+          {/if}{#if adminSelection == false}<i class="fa-solid fa-user-large"></i>  Select Admin User
           {/if}</button
         >
     </div>
-  </div>
 {/if}
 <div class="uk-flex uk-flex-center uk-flex-top uk-grid-large " uk-grid>
   {#if loggedUser == true && !adminSelection}
