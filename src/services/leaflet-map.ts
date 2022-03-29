@@ -80,6 +80,10 @@ export class LeafletMap {
     });
   }
 
+  clearMap(){
+    this.imap.remove()
+  }
+
   addLayer(title: string, layer: Layer) {
     this.overlays[title] = layer;
     this.imap.addLayer(layer);
