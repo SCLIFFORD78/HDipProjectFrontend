@@ -40,7 +40,7 @@ import { push } from "svelte-spa-router";
         hive.location.lng
       );
       weatherHistory = await hiveTracker.readWeatherHistory(
-        hive.fbId
+        hive.fbid
       );
       newCombinedDataTemperature = weatherHistory["combinedPointsTemperature"]
       newCombinedDataHumidity = weatherHistory["combinedPointsHumidity"]
