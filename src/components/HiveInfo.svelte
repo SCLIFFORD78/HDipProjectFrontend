@@ -22,7 +22,7 @@
     console.log(hive)
     myWidget = cloudinary.createUploadWidget({
     cloudName: 'digabwjfx',
-    uploadPreset: hive.fbId
+    uploadPreset: hive.fbid
     }, (error, result) => {
       if (!error && result && result.event === "success") {
         console.log('Done! Here is the image info: ', result.info);
@@ -43,9 +43,9 @@
   };
 
   async function addHiveComment() {
-    const success = await hiveTracker.addHiveComment(hive.fbId, comment);
+    const success = await hiveTracker.addHiveComment(hive.fbid, comment);
     if (success["success"]==true) {
-      hive = await hiveTracker.getHive(hive.fbId);
+      hive = await hiveTracker.getHive(hive.fbid);
     } else {
       errorMessage = "Comment not added - error occurred";
     }
@@ -53,9 +53,9 @@
 
   async function deleteHiveComment(comment_id) {
     const _id = comment_id.target.value;
-    const success = await hiveTracker.deleteHiveComment(hive.fbId, _id);
+    const success = await hiveTracker.deleteHiveComment(hive.fbid, _id);
     if (success["success"]==true) {
-      hive = await hiveTracker.getHive(hive.fbId);
+      hive = await hiveTracker.getHive(hive.fbid);
 
     } else {
       errorMessage = "Comment not removed - error occurred";
@@ -67,13 +67,13 @@
     const loggedInUser = await hiveTracker.getUserByEmail($user.email);
     const loggedInUserHives = await hiveTracker.getHiveByOwner(loggedInUser.data.fbid);
     loggedInUserHives.forEach(loggedInUserHive => {
-      if (loggedInUserHive.fbId == hive.fbId ) {
+      if (loggedInUserHive.fbid == hive.fbid ) {
         deleteHive = true;
         
       }
     });
     if (deleteHive ||loggedInUser.data.admin) {
-      const success = await hiveTracker.deleteOneHive(hive.fbId);
+      const success = await hiveTracker.deleteOneHive(hive.fbid);
     if (success) {
       push("/hives")
     } else {
@@ -184,7 +184,7 @@
               <div class="uk-margin">
                 
                 <button  class="uk-button uk-button-danger uk-button-small uk-width-1-1"
-                on:click={deleteHiveComment} value={detail.fbId}
+                on:click={deleteHiveComment} value={detail.fbid}
                 onclick="return confirm('Are you sure you want to delete comment?')"
                   >Delete Comment
                 </button>

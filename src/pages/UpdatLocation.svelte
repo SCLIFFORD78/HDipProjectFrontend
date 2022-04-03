@@ -36,7 +36,7 @@
     map = new LeafletMap("hive-map", mapConfig, "Terrain");
     map.showZoomControl();
     map.showLayerControl();
-    const hiveStr = `Hive No.${selectedHive.fbId.toString()}`;
+    const hiveStr = `Hive No.${selectedHive.fbid.toString()}`;
 
     pos = map.addMarker(
       { lat: latitude, lng: longtitude },
@@ -58,7 +58,7 @@
     latitude = pos.location.lat;
     longtitude = pos.location.lng;
     var success = await hiveTracker.updateLocation(
-      selectedHive.fbId,
+      selectedHive.fbid,
       latitude,
       longtitude
     );

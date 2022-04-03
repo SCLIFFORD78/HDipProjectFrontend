@@ -114,7 +114,7 @@
               <button
                 class="submit uk-button uk-button-primary uk-button-small uk-width-1-1"
                 on:click={selectedHive}
-                value={hive.fbId}
+                value={hive.fbid}
                 >Select
               </button>
             </td>
