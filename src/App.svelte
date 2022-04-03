@@ -17,7 +17,7 @@
 
   //setContext("HiveTracker", new HiveTracker("http://localhost:4001"));
   //setContext("HiveTracker", new HiveTracker("https://desolate-lowlands-41702.herokuapp.com"));
-  setContext("HiveTracker", new HiveTracker("https://hdipbackend.herokuapp.com/"));
+  setContext("HiveTracker", new HiveTracker("https://hdipbackend.herokuapp.com"));
 
   let routes = {
     "/": Main,
