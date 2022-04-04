@@ -21,7 +21,4 @@
   <div class="uk-width-1-3@m ">
     <img width="500" src="{hive}" alt="hive">
   </div>
-  <div class="uk-width-1-3@m ">
-    <img width="500" src="{bee}" alt="hive">
-  </div>
 </div>
