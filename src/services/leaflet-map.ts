@@ -19,7 +19,7 @@ export interface MapConfig {
 }
 
 var myIcon = L.icon({
-  iconUrl: 'https://www.google.ie/url?sa=i&url=https%3A%2F%2Fwww.seekpng.com%2Fipng%2Fu2q8u2u2t4t4i1y3_bumblebee-honey-bee-icon-cartoon-bee-pillow-case%2F&psig=AOvVaw0LK2U6DHaC3rufc1ldcNXy&ust=1649119633026000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCKD97rqX-fYCFQAAAAAdAAAAABAJ',
+  iconUrl: 'public\\images\\bumblebee.png',
   iconSize: [48, 48],
   iconAnchor: [24, 36],
   popupAnchor: [-3, -76]

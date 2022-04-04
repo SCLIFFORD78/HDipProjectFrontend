@@ -2,6 +2,7 @@
   import {title, subTitle, navBar, welcomeBar} from "../stores"
   import LoginForm from "../components/LoginForm.svelte"
   import hive from "/src/assets/beehive.jpg";
+  import bee from "/src/assets/bumblebee.png";
   title.set("Hive Tracker App.");
   subTitle.set("Please Log in");
 
@@ -19,5 +20,8 @@
   </div>
   <div class="uk-width-1-3@m ">
     <img width="500" src="{hive}" alt="hive">
+  </div>
+  <div class="uk-width-1-3@m ">
+    <img width="500" src="{bee}" alt="hive">
   </div>
 </div>
