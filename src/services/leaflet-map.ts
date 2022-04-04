@@ -19,7 +19,7 @@ export interface MapConfig {
 }
 
 var myIcon = L.icon({
-  iconUrl: 'src\\assets\\bumblebee-honey-bee-icon-png-favpng-MZSpn1HbbLY4S7fGw0czxtSux-removebg-preview.png',
+  iconUrl: 'src\\assets\\bumblebee.png',
   iconSize: [48, 48],
   iconAnchor: [24, 36],
   popupAnchor: [-3, -76]
