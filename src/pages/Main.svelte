@@ -16,7 +16,7 @@
 <div class="uk-container uk-container uk-container-small uk-margin">
   <div class="uk-child-width-expand uk-flex-center uk-flex-middle uk-text-center" uk-grid>
     <div class="uk-width-auto@m">
-      <img width="600" src="{hive}" alt="img">
+      <img width="400" src="{hive}" alt="img">
     </div>
     <div class="uk-width-expand@m">
       <h2 class="uk-heading-small uk-heading-divider">Help track hive locations</h2>
