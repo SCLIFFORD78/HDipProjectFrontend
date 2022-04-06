@@ -8,8 +8,7 @@
   import { LineChart } from "@carbon/charts-svelte";
   import { ComboChart } from "@carbon/charts-svelte";
   import { user } from "../stores";
-import { push } from "svelte-spa-router";
-  
+  import { push } from "svelte-spa-router";
 
   const hiveTracker = getContext("HiveTracker");
 
@@ -17,6 +16,7 @@ import { push } from "svelte-spa-router";
   let weatherHistory = [];
   let errorMessage = "";
   let loggedInUser;
+  let alarms = [];
 
   title.set("Hive Tracker App");
   subTitle.set("Hive Details");
@@ -24,13 +24,10 @@ import { push } from "svelte-spa-router";
     bar: mainBar,
   });
 
-
   var newCombinedDataTemperature = [];
   var newCombinedDataHumidity = [];
 
-
   const hive = hiveTracker.selectedHive[0];
-
 
   onMount(async () => {
     try {
@@ -39,24 +36,47 @@ import { push } from "svelte-spa-router";
         hive.location.lat,
         hive.location.lng
       );
-      weatherHistory = await hiveTracker.readWeatherHistory(
-        hive.fbid
-      );
-      newCombinedDataTemperature = weatherHistory["combinedPointsTemperature"]
-      newCombinedDataHumidity = weatherHistory["combinedPointsHumidity"]
-
+      weatherHistory = await hiveTracker.readWeatherHistory(hive.fbid);
+      newCombinedDataTemperature = weatherHistory["combinedPointsTemperature"];
+      newCombinedDataHumidity = weatherHistory["combinedPointsHumidity"];
+      alarms = await hiveTracker.getHiveAlarms(hive.fbid)
     } catch (error) {
       errorMessage = "Weather Details unavailable";
       console.log(error);
     }
-
   });
 </script>
 
 <div class="uk-container uk-container-xlarge uk-margin">
+  <div id="offcanvas-reveal" uk-offcanvas="mode: reveal; overlay: true">
+    <div class="uk-offcanvas-bar">
+      <button class="uk-offcanvas-close" type="button" uk-close />
+
+      <div class="uk-table uk-table-divider">
+        <table class="uk-table">
+          <thead>
+            <th> Hive Number </th>
+            <th> Category </th>
+            <th> Owner </th>
+          </thead>
+          <tbody class="uk-text-left">
+            {#if alarms}
+              {#each alarms as alarm}
+                <tr>
+                  <td>{alarm.act}</td>
+                  <td>{alarm.hiveid}</td>
+                  <td> {alarm.tempAlarm} </td>
+                </tr>
+              {/each}
+            {/if}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
   <div>
     <div
-      class="uk-card uk-card-default uk-card-hover uk-card-body uk-margin uk-column-1-4"
+      class="uk-card uk-card-default uk-card-hover uk-card-body uk-margin uk-column-1-4 uk-text-center"
     >
       <h3 class="uk-card-title">Hive Number: {hive.tag}</h3>
       <p>FeelsLike: {weather.feelsLike} Celcus</p>
@@ -65,6 +85,12 @@ import { push } from "svelte-spa-router";
       <p>Wind Direction: {weather.windDirection} Deg.</p>
       <p>Visibility: {weather.visibility} km</p>
       <p>Humidity: {weather.humidity}%</p>
+      <a
+        uk-toggle="target: #offcanvas-reveal"
+        class="uk-icon-link uk-margin-small-right"
+        uk-icon="icon:bell; ratio:2"
+        style="color: crimson;"
+      />
     </div>
   </div>
   <div class="uk-column-1-2 " uk-grid>
@@ -76,15 +102,15 @@ import { push } from "svelte-spa-router";
     </div>
   </div>
 
-
   <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-margin">
     <ComboChart
       data={newCombinedDataTemperature}
       options={{
-        title: "Values of Hive Temperature (If recorded) and ambient Temperature",
+        title:
+          "Values of Hive Temperature (If recorded) and ambient Temperature",
         points: {
           enabled: false,
-          radius: 0
+          radius: 0,
         },
         axes: {
           left: {
@@ -138,7 +164,7 @@ import { push } from "svelte-spa-router";
         title: "Values of Hive Humidity (If recorded) and ambient Humidity",
         points: {
           enabled: false,
-          radius: 0
+          radius: 0,
         },
         axes: {
           left: {
@@ -175,7 +201,7 @@ import { push } from "svelte-spa-router";
         zoomBar: {
           top: {
             enabled: true,
-            updateRangeAxis: true
+            updateRangeAxis: true,
           },
         },
         timeScale: {

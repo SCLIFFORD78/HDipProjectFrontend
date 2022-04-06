@@ -4,6 +4,7 @@ import {user} from "../stores";
 
 export class HiveTracker {
   hiveList = [];
+  alarmList = [];
   selectedHive = [];
   baseUrl = "";
 
@@ -320,6 +321,16 @@ export class HiveTracker {
 
   async clearAuth(user) {
     axios.defaults.headers.common["Authorization"] = "";
+  }
+
+  async getHiveAlarms(fbid) {
+    try {
+      const response = await axios.get(this.baseUrl + "/api/hives/hive/alarms/"+fbid);
+      this.alarmList = response.data;
+      return this.alarmList;
+    } catch (error) {
+      return [];
+    }
   }
 }
 
