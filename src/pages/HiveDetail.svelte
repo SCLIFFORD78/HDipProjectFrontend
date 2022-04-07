@@ -9,6 +9,7 @@
   import { ComboChart } from "@carbon/charts-svelte";
   import { user } from "../stores";
   import { push } from "svelte-spa-router";
+  import { Confirm } from "svelte-confirm";
 
   const hiveTracker = getContext("HiveTracker");
 
@@ -29,6 +30,9 @@
 
   const hive = hiveTracker.selectedHive[0];
 
+  var allAlarms = true;
+  var sortedAlarms = []
+
   onMount(async () => {
     try {
       loggedInUser = await hiveTracker.getUserByEmail($user.email);
@@ -39,7 +43,7 @@
       weatherHistory = await hiveTracker.readWeatherHistory(hive.fbid);
       newCombinedDataTemperature = weatherHistory["combinedPointsTemperature"];
       newCombinedDataHumidity = weatherHistory["combinedPointsHumidity"];
-      sortAlarms()
+      sortAlarms();
     } catch (error) {
       errorMessage = "Weather Details unavailable";
       console.log(error);
@@ -49,22 +53,42 @@
   async function ackAlarm(alarmID) {
     let success = await hiveTracker.ackAlarm(alarmID);
     if (success) {
-      sortAlarms()
+      sortAlarms();
     } else {
       errorMessage = "Faile to ack Alarm";
     }
   }
 
-  async function sortAlarms(){
+  async function sortAlarms() {
     alarms = await hiveTracker.getHiveAlarms(hive.fbid);
-      alarms.sort((a, b) => a.dateActive - b.dateActive);
-      alarms.forEach((alarm) => {
-        alarm.dateActive =
-          new Date(parseInt(alarm.dateActive) * 1000).toLocaleTimeString() +
-          " " +
-          new Date(parseInt(alarm.dateActive) * 1000).toLocaleDateString();
-      });
+    alarms.sort((a, b) => a.dateActive - b.dateActive);
+    alarms.forEach((alarm) => {
+      alarm.dateActive =
+        new Date(parseInt(alarm.dateActive) * 1000).toLocaleTimeString() +
+        " " +
+        new Date(parseInt(alarm.dateActive) * 1000).toLocaleDateString();
+    });
+  }
 
+  async function filterAlarms() {
+    sortAlarms();
+    sortedAlarms = []
+    alarms.forEach((alarm) => {
+      if (!alarm.act) {
+        sortedAlarms.push(alarm);
+      }
+    });
+
+    alarms = sortedAlarms;
+  }
+
+  function toggleFilter() {
+    if (allAlarms) {
+      allAlarms = false;
+      filterAlarms();
+    } else {
+      allAlarms = true;
+    }
   }
 </script>
 
@@ -72,6 +96,12 @@
   <div id="offcanvas-reveal" uk-offcanvas="mode: reveal; overlay: true">
     <div class="uk-offcanvas-bar">
       <button class="uk-offcanvas-close" type="button" uk-close />
+      <div class="uk-align-center uk-padding" on:click={toggleFilter}>
+        {#if allAlarms == true}<i class="fas fa-toggle-on fa-2x" /> all alarms
+        {/if}{#if allAlarms == false}<i class="fas fa-toggle-off fa-2x" /> active
+          alarms
+        {/if}
+      </div>
 
       <div class="uk-table uk-table-divider">
         <table class="uk-table">
@@ -82,8 +112,39 @@
             <th> DTG </th>
           </thead>
           <tbody class="uk-text-left">
-            {#if alarms}
-              {#each alarms as alarm}
+            {#if allAlarms == true}
+              {#if alarms}
+                {#each alarms as alarm}
+                  <tr>
+                    {#if alarm.act}
+                      <td
+                        ><span
+                          class="uk-badge"
+                          style="background-color: green;"
+                        /></td
+                      >
+                    {:else}
+                      <td
+                        ><Confirm
+                          confirmTitle="Acknowledge Alarm"
+                          cancelTitle="Cancel"
+                          let:confirm={confirmThis}
+                          ><span
+                            class="uk-badge"
+                            style="background-color: red;"
+                            on:click={() => confirmThis(ackAlarm, alarm.fbid)}
+                          />
+                        </Confirm></td
+                      >
+                    {/if}
+                    <td>{alarm.recordedValue.toFixed(2)}</td>
+                    <td> {alarm.tempAlarm.toFixed(2)} </td>
+                    <td> {alarm.dateActive} </td>
+                  </tr>
+                {/each}
+              {/if}
+            {:else if allAlarms == false}
+              {#each sortedAlarms as alarm}
                 <tr>
                   {#if alarm.act}
                     <td
@@ -94,12 +155,16 @@
                     >
                   {:else}
                     <td
-                      ><span
-                        class="uk-badge"
-                        style="background-color: red;"
-                        on:click|preventDefault={() => ackAlarm(alarm.fbid)}
-                        onclick="return confirm('Are you sure you want Acknowledge alarm CANNOT be undone!')"
-                      /></td
+                      ><Confirm
+                        confirmTitle="Acknowledge Alarm"
+                        cancelTitle="Cancel"
+                        let:confirm={confirmThis}
+                        ><span
+                          class="uk-badge"
+                          style="background-color: red;"
+                          on:click={() => confirmThis(ackAlarm, alarm.fbid)}
+                        />
+                      </Confirm></td
                     >
                   {/if}
                   <td>{alarm.recordedValue.toFixed(2)}</td>
