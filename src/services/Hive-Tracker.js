@@ -332,5 +332,17 @@ export class HiveTracker {
       return [];
     }
   }
+
+  async ackAlarm(fbid) {
+    const payload = {fbid:fbid}
+    try {
+      const response = await axios.post(this.baseUrl + "/api/hives/hive/ackalarm", payload);
+      return response.data;
+    } catch (e) {
+      return null;
+    }
+  }
+
+
 }
 

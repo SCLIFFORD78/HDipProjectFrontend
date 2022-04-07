@@ -39,12 +39,33 @@
       weatherHistory = await hiveTracker.readWeatherHistory(hive.fbid);
       newCombinedDataTemperature = weatherHistory["combinedPointsTemperature"];
       newCombinedDataHumidity = weatherHistory["combinedPointsHumidity"];
-      alarms = await hiveTracker.getHiveAlarms(hive.fbid)
+      sortAlarms()
     } catch (error) {
       errorMessage = "Weather Details unavailable";
       console.log(error);
     }
   });
+
+  async function ackAlarm(alarmID) {
+    let success = await hiveTracker.ackAlarm(alarmID);
+    if (success) {
+      sortAlarms()
+    } else {
+      errorMessage = "Faile to ack Alarm";
+    }
+  }
+
+  async function sortAlarms(){
+    alarms = await hiveTracker.getHiveAlarms(hive.fbid);
+      alarms.sort((a, b) => a.dateActive - b.dateActive);
+      alarms.forEach((alarm) => {
+        alarm.dateActive =
+          new Date(parseInt(alarm.dateActive) * 1000).toLocaleTimeString() +
+          " " +
+          new Date(parseInt(alarm.dateActive) * 1000).toLocaleDateString();
+      });
+
+  }
 </script>
 
 <div class="uk-container uk-container-xlarge uk-margin">
@@ -55,17 +76,35 @@
       <div class="uk-table uk-table-divider">
         <table class="uk-table">
           <thead>
-            <th> Hive Number </th>
-            <th> Category </th>
-            <th> Owner </th>
+            <th> Ack.</th>
+            <th> Temp </th>
+            <th> Set </th>
+            <th> DTG </th>
           </thead>
           <tbody class="uk-text-left">
             {#if alarms}
               {#each alarms as alarm}
                 <tr>
-                  <td>{alarm.act}</td>
-                  <td>{alarm.hiveid}</td>
-                  <td> {alarm.tempAlarm} </td>
+                  {#if alarm.act}
+                    <td
+                      ><span
+                        class="uk-badge"
+                        style="background-color: green;"
+                      /></td
+                    >
+                  {:else}
+                    <td
+                      ><span
+                        class="uk-badge"
+                        style="background-color: red;"
+                        on:click|preventDefault={() => ackAlarm(alarm.fbid)}
+                        onclick="return confirm('Are you sure you want Acknowledge alarm CANNOT be undone!')"
+                      /></td
+                    >
+                  {/if}
+                  <td>{alarm.recordedValue.toFixed(2)}</td>
+                  <td> {alarm.tempAlarm.toFixed(2)} </td>
+                  <td> {alarm.dateActive} </td>
                 </tr>
               {/each}
             {/if}
