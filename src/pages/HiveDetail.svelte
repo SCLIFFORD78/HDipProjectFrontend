@@ -8,8 +8,8 @@
   import { LineChart } from "@carbon/charts-svelte";
   import { ComboChart } from "@carbon/charts-svelte";
   import { user } from "../stores";
-import { push } from "svelte-spa-router";
-  
+  import { push } from "svelte-spa-router";
+  import { Confirm } from "svelte-confirm";
 
   const hiveTracker = getContext("HiveTracker");
 
@@ -17,6 +17,7 @@ import { push } from "svelte-spa-router";
   let weatherHistory = [];
   let errorMessage = "";
   let loggedInUser;
+  let alarms = [];
 
   title.set("Hive Tracker App");
   subTitle.set("Hive Details");
@@ -24,13 +25,13 @@ import { push } from "svelte-spa-router";
     bar: mainBar,
   });
 
-
   var newCombinedDataTemperature = [];
   var newCombinedDataHumidity = [];
 
-
   const hive = hiveTracker.selectedHive[0];
 
+  var allAlarms = true;
+  var sortedAlarms = []
 
   onMount(async () => {
     try {
@@ -39,24 +40,147 @@ import { push } from "svelte-spa-router";
         hive.location.lat,
         hive.location.lng
       );
-      weatherHistory = await hiveTracker.readWeatherHistory(
-        hive.fbid
-      );
-      newCombinedDataTemperature = weatherHistory["combinedPointsTemperature"]
-      newCombinedDataHumidity = weatherHistory["combinedPointsHumidity"]
-
+      weatherHistory = await hiveTracker.readWeatherHistory(hive.fbid);
+      newCombinedDataTemperature = weatherHistory["combinedPointsTemperature"];
+      newCombinedDataHumidity = weatherHistory["combinedPointsHumidity"];
+      sortAlarms();
     } catch (error) {
       errorMessage = "Weather Details unavailable";
       console.log(error);
     }
-
   });
+
+  async function ackAlarm(alarmID) {
+    let success = await hiveTracker.ackAlarm(alarmID);
+    if (success) {
+      sortAlarms();
+    } else {
+      errorMessage = "Faile to ack Alarm";
+    }
+  }
+
+  async function sortAlarms() {
+    alarms = await hiveTracker.getHiveAlarms(hive.fbid);
+    alarms.sort((a, b) => a.dateActive - b.dateActive);
+    alarms.forEach((alarm) => {
+      alarm.dateActive =
+        new Date(parseInt(alarm.dateActive) * 1000).toLocaleTimeString() +
+        " " +
+        new Date(parseInt(alarm.dateActive) * 1000).toLocaleDateString();
+    });
+  }
+
+  async function filterAlarms() {
+    sortAlarms();
+    sortedAlarms = []
+    alarms.forEach((alarm) => {
+      if (!alarm.act) {
+        sortedAlarms.push(alarm);
+      }
+    });
+
+    alarms = sortedAlarms;
+  }
+
+  function toggleFilter() {
+    if (allAlarms) {
+      allAlarms = false;
+      filterAlarms();
+    } else {
+      allAlarms = true;
+    }
+  }
 </script>
 
 <div class="uk-container uk-container-xlarge uk-margin">
+  <div id="offcanvas-reveal" uk-offcanvas="mode: reveal; overlay: true">
+    <div class="uk-offcanvas-bar">
+      <button class="uk-offcanvas-close" type="button" uk-close />
+      <div class="uk-align-center uk-padding" on:click={toggleFilter}>
+        {#if allAlarms == true}<i class="fas fa-toggle-on fa-2x" /> all alarms
+        {/if}{#if allAlarms == false}<i class="fas fa-toggle-off fa-2x" /> active
+          alarms
+        {/if}
+      </div>
+
+      <div class="uk-table uk-table-divider">
+        <table class="uk-table">
+          <thead>
+            <th> Ack.</th>
+            <th> Temp </th>
+            <th> Set </th>
+            <th> DTG </th>
+          </thead>
+          <tbody class="uk-text-left">
+            {#if allAlarms == true}
+              {#if alarms}
+                {#each alarms as alarm}
+                  <tr>
+                    {#if alarm.act}
+                      <td
+                        ><span
+                          class="uk-badge"
+                          style="background-color: green;"
+                        /></td
+                      >
+                    {:else}
+                      <td
+                        ><Confirm
+                          confirmTitle="Acknowledge Alarm"
+                          cancelTitle="Cancel"
+                          let:confirm={confirmThis}
+                          ><span
+                            class="uk-badge"
+                            style="background-color: red;"
+                            on:click={() => confirmThis(ackAlarm, alarm.fbid)}
+                          />
+                        </Confirm></td
+                      >
+                    {/if}
+                    <td>{alarm.recordedValue.toFixed(2)}</td>
+                    <td> {alarm.tempAlarm.toFixed(2)} </td>
+                    <td> {alarm.dateActive} </td>
+                  </tr>
+                {/each}
+              {/if}
+            {:else if allAlarms == false}
+              {#each sortedAlarms as alarm}
+                <tr>
+                  {#if alarm.act}
+                    <td
+                      ><span
+                        class="uk-badge"
+                        style="background-color: green;"
+                      /></td
+                    >
+                  {:else}
+                    <td
+                      ><Confirm
+                        confirmTitle="Acknowledge Alarm"
+                        cancelTitle="Cancel"
+                        let:confirm={confirmThis}
+                        ><span
+                          class="uk-badge"
+                          style="background-color: red;"
+                          on:click={() => confirmThis(ackAlarm, alarm.fbid)}
+                        />
+                      </Confirm></td
+                    >
+                  {/if}
+                  <td>{alarm.recordedValue.toFixed(2)}</td>
+                  <td> {alarm.tempAlarm.toFixed(2)} </td>
+                  <td> {alarm.dateActive} </td>
+                </tr>
+              {/each}
+            {/if}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
   <div>
     <div
-      class="uk-card uk-card-default uk-card-hover uk-card-body uk-margin uk-column-1-4"
+      class="uk-card uk-card-default uk-card-hover uk-card-body uk-margin uk-column-1-4 uk-text-center"
     >
       <h3 class="uk-card-title">Hive Number: {hive.tag}</h3>
       <p>FeelsLike: {weather.feelsLike} Celcus</p>
@@ -65,6 +189,12 @@ import { push } from "svelte-spa-router";
       <p>Wind Direction: {weather.windDirection} Deg.</p>
       <p>Visibility: {weather.visibility} km</p>
       <p>Humidity: {weather.humidity}%</p>
+      <a
+        uk-toggle="target: #offcanvas-reveal"
+        class="uk-icon-link uk-margin-small-right"
+        uk-icon="icon:bell; ratio:2"
+        style="color: crimson;"
+      />
     </div>
   </div>
   <div class="uk-column-1-2 " uk-grid>
@@ -76,15 +206,15 @@ import { push } from "svelte-spa-router";
     </div>
   </div>
 
-
   <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-margin">
     <ComboChart
       data={newCombinedDataTemperature}
       options={{
-        title: "Values of Hive Temperature (If recorded) and ambient Temperature",
+        title:
+          "Values of Hive Temperature (If recorded) and ambient Temperature",
         points: {
           enabled: false,
-          radius: 0
+          radius: 0,
         },
         axes: {
           left: {
@@ -138,7 +268,7 @@ import { push } from "svelte-spa-router";
         title: "Values of Hive Humidity (If recorded) and ambient Humidity",
         points: {
           enabled: false,
-          radius: 0
+          radius: 0,
         },
         axes: {
           left: {
@@ -175,7 +305,7 @@ import { push } from "svelte-spa-router";
         zoomBar: {
           top: {
             enabled: true,
-            updateRangeAxis: true
+            updateRangeAxis: true,
           },
         },
         timeScale: {
