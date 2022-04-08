@@ -22,7 +22,8 @@
     console.log(hive)
     myWidget = cloudinary.createUploadWidget({
     cloudName: 'digabwjfx',
-    uploadPreset: hive.fbid
+    uploadPreset: 'hive_tracker',
+    tags: [hive.fbid],
     }, (error, result) => {
       if (!error && result && result.event === "success") {
         console.log('Done! Here is the image info: ', result.info);
