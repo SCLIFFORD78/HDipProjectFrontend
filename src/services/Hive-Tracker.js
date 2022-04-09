@@ -5,6 +5,7 @@ import {user} from "../stores";
 export class HiveTracker {
   hiveList = [];
   alarmList = [];
+  commentsList = [];
   selectedHive = [];
   baseUrl = "";
 
@@ -220,11 +221,22 @@ export class HiveTracker {
     }
   }
 
-  async addHiveComment(id, comment) {
+  async getHiveComments(fbid) {
+    try {
+      const response = await axios.get(this.baseUrl + "/api/hives/hive/comments/"+fbid);
+      this.commentsList = response.data;
+      return this.commentsList;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async addHiveComment(comment, id, userid) {
 
     const details = {
       _id: id,
-      comment: comment
+      comment: comment,
+      userid: userid
     }
     try {
       const response = await axios.post(this.baseUrl + "/api/hives/addComment", details);
@@ -234,9 +246,9 @@ export class HiveTracker {
     }
   }
 
-  async deleteHiveComment(hive_id, comment_id) {
+  async deleteHiveComment(comment_id) {
     try {
-      const response = await axios.delete(this.baseUrl + "/api/hives/deleteComment/" + hive_id + "/" + comment_id);
+      const response = await axios.delete(this.baseUrl + "/api/hives/deleteComment/" + comment_id);
       return response.data;
     } catch (e) {
       return null;

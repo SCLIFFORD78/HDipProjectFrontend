@@ -12,6 +12,7 @@
   export let match;
 
   onMount(async () => {
+    hiveList=[]
     hiveList = await hiveTracker.getHives();
     for (var i = 0; i < hiveList.length; i++) {
       var user = await hiveTracker.getUser(hiveList[i].user);
