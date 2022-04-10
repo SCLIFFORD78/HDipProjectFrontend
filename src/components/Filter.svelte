@@ -4,7 +4,7 @@
   const hiveTracker = getContext("HiveTracker");
 
   let selectedType = 0;
-  let type = ["All", "Super", "National", "Langstroth", "Top Bar", "Warré"];
+  let type = ["All", "Super", "National", "Langstroth", "Top Bar", "Warree"];
   export let expFilter;
   let hiveList;
   let errorMessage = " ";

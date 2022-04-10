@@ -16,7 +16,7 @@
   let hives = [];
   let users = [];
   let hiveTypeData = {
-    labels: ["Super", "National", "Langstroth", "Top Bar", "Warré"],
+    labels: ["Super", "National", "Langstroth", "Top Bar", "Warree"],
     datasets: [
       {
         values: [0, 0, 0, 0, 0],
@@ -38,7 +38,7 @@
     let sumNational = 0;
     let sumLangstroth = 0;
     let sumTopBar = 0;
-    let sumWarré = 0;
+    let sumWarree = 0;
 
     hiveList.forEach((hive) => {
       if (hive.type == "Super") {
@@ -50,14 +50,14 @@
       } else if (hive.type == "Top Bar") {
         sumTopBar++;
       } else {
-        sumWarré++;
+        sumWarree++;
       }
     });
     hiveTypeData.datasets[0].values[0] = sumSuper;
     hiveTypeData.datasets[0].values[1] = sumNational;
     hiveTypeData.datasets[0].values[2] = sumLangstroth;
     hiveTypeData.datasets[0].values[3] = sumTopBar;
-    hiveTypeData.datasets[0].values[4] = sumWarré;
+    hiveTypeData.datasets[0].values[4] = sumWarree;
 
     let sumAdmin = 0;
     let sumUser = 0;
