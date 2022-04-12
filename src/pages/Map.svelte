@@ -17,7 +17,7 @@
   let adminOwnHiveFilter = false;
   let mapConfig
 
-  let types = ["Super", "National", "Langstroth", "Top Bar", "Warré"];
+  let types = ["Super", "National", "Langstroth", "Top Bar", "Warree"];
 
   let map;
 

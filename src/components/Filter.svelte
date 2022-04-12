@@ -4,7 +4,7 @@
   const hiveTracker = getContext("HiveTracker");
 
   let selectedType = 0;
-  let type = ["All", "Super", "National", "Langstroth", "Top Bar", "Warré"];
+  let type = ["All", "Super", "National", "Langstroth", "Top Bar", "Warree"];
   export let expFilter;
   let hiveList;
   let errorMessage = " ";
@@ -12,6 +12,7 @@
   export let match;
 
   onMount(async () => {
+    hiveList=[]
     hiveList = await hiveTracker.getHives();
     for (var i = 0; i < hiveList.length; i++) {
       var user = await hiveTracker.getUser(hiveList[i].user);

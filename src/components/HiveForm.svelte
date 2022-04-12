@@ -12,7 +12,7 @@
   let comments = " ";
   let description = "";
   let selectedType = 0;
-  let type = ["Super", "National", "Langstroth", "Top Bar", "Warré"];
+  let type = ["Super", "National", "Langstroth", "Top Bar", "Warree"];
   let errorMessage = "";
   let owner = {};
 

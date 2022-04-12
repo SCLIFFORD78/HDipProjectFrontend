@@ -201,7 +201,7 @@
     <div class="uk-width-expand@m ">
       <HiveInfo />
     </div>
-    <div class="uk-card uk-card-default uk-card-body uk-width-1-2@m">
+    <div class="uk-card uk-card-default uk-card-body uk-width-expand@m ">
       <PhotoWidget />
     </div>
   </div>

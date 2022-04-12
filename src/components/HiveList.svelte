@@ -17,8 +17,18 @@
 
   const hiveTracker = getContext("HiveTracker");
 
+  onMount(async () => {
+    loggedInUser = await hiveTracker.getUserByEmail($user.email);
+    expFilter();
+    if (loggedInUser.data.admin == true) {
+      adminUser = true;
+    } else {
+      adminUser = false;
+    }
+  });
+
   async function selectedHive(hive) {
-    await hiveTracker.getHive(hive.target.value).then((selectedHive) => {
+    await hiveTracker.getHive(hive).then((selectedHive) => {
       if (selectedHive) {
         selectedHiveInfo = selectedHive;
       } else {
@@ -55,15 +65,7 @@
     });
   }
 
-  onMount(async () => {
-    loggedInUser = await hiveTracker.getUserByEmail($user.email);
-    expFilter();
-    if (loggedInUser.data.admin == true) {
-      adminUser = true;
-    } else {
-      adminUser = false;
-    }
-  });
+  
 
   async function toggleAdminOwnHiveFilter() {
     if (adminOwnHiveFilter) {
@@ -113,8 +115,7 @@
             <td>
               <button
                 class="submit uk-button uk-button-primary uk-button-small uk-width-1-1"
-                on:click={selectedHive}
-                value={hive.fbid}
+                on:click|preventDefault={() => selectedHive(hive.fbid)}
                 >Select
               </button>
             </td>
