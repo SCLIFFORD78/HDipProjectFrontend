@@ -199,7 +199,7 @@
     </div>
   </div>
   <div class="uk-column-1-2 " uk-grid>
-    <div class="uk-width-expand@m ">
+    <div class="uk-width-expand@m  ">
       <HiveInfo />
     </div>
     <div class="uk-card uk-card-default uk-card-body uk-width-expand@m ">

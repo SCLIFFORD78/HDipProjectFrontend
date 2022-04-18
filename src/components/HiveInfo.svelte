@@ -126,7 +126,7 @@
 
 <div
   class="uk-margin uk-width-2xlarge uk-margin-auto uk-card uk-card-default uk-card-body 
-  uk-box-shadow-large uk-card-hover uk-panel-scrollable "
+  uk-box-shadow-large uk-card-hover  "
 >
 <div class="uk-column-1-4">
 
@@ -193,7 +193,7 @@
       </button>
     </div>
 
-  
+  <div class="uk-panel-scrollable uk-resize-vertical uk-height-max-large">
   <table class="uk-table">
     <caption>
       RECORDS
@@ -229,4 +229,5 @@
       {/if}
     </tbody>
   </table>
+</div>
 </div>
