@@ -40,11 +40,11 @@
       <button
           on:click={adminAccount}
           href="#toggle-animation"
-          class="uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom "
+          class="uk-button uk-button-primary uk-width-1-2 uk-margin-small-bottom uk-align-center"
           type="button"
-          >{#if adminSelection == true}<i class="fa-solid fa-users fa-2x"></i>    Select User Management
+          >{#if adminSelection == true}<i class="fas fa-users fa-2x"></i>    Select User Management
             
-          {/if}{#if adminSelection == false}<i class="fa-solid fa-user-large"></i>  Select Admin User
+          {/if}{#if adminSelection == false}<i class="fas fa-user fa-2x"></i>  Select Admin User
           {/if}</button
         >
     </div>

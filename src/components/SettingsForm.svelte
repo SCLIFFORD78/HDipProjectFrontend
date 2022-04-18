@@ -38,8 +38,8 @@
 
 <form on:submit|preventDefault={save}>
   <div class="uk-margin uk-text-left">
-    <div class="uk-margin">
-      <label class="uk-form-label" >First name: Single word and must begin with a capitol letter</label>
+    <div class="uk-margin ">
+      <label class="uk-form-label " >First name: Single word and must begin with a capitol letter</label>
       <div class="uk-inline uk-width-1-1">
         <span class="uk-form-icon" uk-icon="icon: user"></span> <input bind:value={firstName}
                                                                        class="uk-input uk-form-large" type="text"

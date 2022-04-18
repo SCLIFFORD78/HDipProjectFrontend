@@ -36,6 +36,25 @@ export class HiveTracker {
     }
   }
 
+  
+  async googleLogin(googleID,email) {
+    try {
+      const response = await axios.post(`${this.baseUrl}/api/users/googleauthenticate`, {googleID});
+      axios.defaults.headers.common["Authorization"] = "Bearer " + response.data.token;
+      if (response.data.success) {
+        user.set({
+          email: email,
+          token: response.data.token
+        });
+      localStorage.hive = JSON.stringify(response.data.token);
+      return true;
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
+  }
+
   async logout() {
     
     try {
