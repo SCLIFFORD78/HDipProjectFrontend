@@ -1,4 +1,4 @@
-<script>
+<script src="https://apis.google.com/js/platform.js" async defer>
   import { push } from "svelte-spa-router";
   import {getContext} from "svelte";
   const hiveTracker = getContext("HiveTracker");
@@ -17,7 +17,41 @@
       errorMessage = "Invalid Credentials";
     }
   }
+  async function googleLogin(googleID,email) {
+    let success = await hiveTracker.googleLogin(googleID)
+    if (success) {
+      push("/map");
+    } else {
+      email = "";
+      password = "";
+      errorMessage = "Invalid Google Details";
+    }
+  }
+
+  window.onSignIn = (googleUser) => {
+     const profile = googleUser.getBasicProfile();
+     console.log('ID: ' + profile.getId());
+     console.log('Name: ' + profile.getName());
+     console.log('Image URL: ' + profile.getImageUrl());
+     console.log('Email: ' + profile.getEmail());
+     console.log('IDtoken: ' + googleUser.getAuthResponse().id_token);
+     googleLogin(googleUser.getAuthResponse().id_token , profile.getEmail())
+  };
+
+function signOut() {
+    const auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(() => {
+      // User is now signed out
+    });
+  }
+
 </script>
+
+<svelte:head>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+</svelte:head>
+
+
 
 <form on:submit|preventDefault={login}>
   <div class="uk-margin uk-text-left">
@@ -42,3 +76,8 @@
     </div>
   {/if}
 </form>
+<!-- <div class="g-signin2" data-longtitle="true" data-onsuccess="onSignIn" />
+<a href="#"  on:click={signOut}>Sign out</a> -->
+
+
+

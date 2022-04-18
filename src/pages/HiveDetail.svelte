@@ -180,21 +180,22 @@
   </div>
   <div>
     <div
-      class="uk-card uk-card-default uk-card-hover uk-card-body uk-margin uk-column-1-4 uk-text-center"
+      class="uk-card uk-card-default uk-card-hover uk-card-body uk-margin uk-column-1-6 uk-text-center"
     >
-      <h3 class="uk-card-title">Hive Number: {hive.tag}</h3>
+      <h2 class="uk-card-title">Hive No: {hive.tag}</h2>
       <p>FeelsLike: {weather.feelsLike} Celcus</p>
       <p>Cloud Cover: {weather.clouds}</p>
       <p>Wind Speed: {weather.windSpeed} Kph</p>
-      <p>Wind Direction: {weather.windDirection} Deg.</p>
+      <p>Direction: {weather.windDirection} Deg.</p>
       <p>Visibility: {weather.visibility} km</p>
       <p>Humidity: {weather.humidity}%</p>
-      <a
-        uk-toggle="target: #offcanvas-reveal"
-        class="uk-icon-link uk-margin-small-right"
-        uk-icon="icon:bell; ratio:2"
-        style="color: crimson;"
-      />
+      <div class="uk-margin">
+        <button class="uk-button uk-button-link uk-card uk-card-small uk-card-hover">
+        <i class="fas fa-bell fa-3x" 
+        uk-tooltip="title:Show Alarms;pos:bottom" 
+        style="color: rgb(255, 0, 0);"
+        uk-toggle="target: #offcanvas-reveal"></i></button>
+      </div>
     </div>
   </div>
   <div class="uk-column-1-2 " uk-grid>
